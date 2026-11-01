@@ -1097,3 +1097,19 @@ form?.addEventListener(
                 )
                 .value
                 .trim(
+/* Pojistka – úvodní logo se vždy po načtení skryje */
+window.addEventListener("load", () => {
+    setTimeout(() => {
+        const loadingScreen = document.getElementById("loadingScreen");
+
+        if (loadingScreen) {
+            loadingScreen.style.opacity = "0";
+            loadingScreen.style.visibility = "hidden";
+            loadingScreen.style.pointerEvents = "none";
+
+            setTimeout(() => {
+                loadingScreen.style.display = "none";
+            }, 800);
+        }
+    }, 2000);
+});
