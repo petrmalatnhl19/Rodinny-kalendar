@@ -2216,3 +2216,62 @@ line-height: 1.45;
 .task-note .task-status {
 display: none;
 }
+/* =========================================================
+ÚPRAVA A ODSTRANĚNÍ UDÁLOSTÍ
+========================================================= */
+
+.event-actions {
+display: flex;
+align-items: center;
+
+gap: 5px;
+
+margin-left: auto;
+
+}
+
+.event-action {
+width: 32px;
+height: 32px;
+
+display: grid;
+place-items: center;
+
+border-radius: 10px;
+
+color: var(--text-soft);
+
+background:
+    rgba(255, 255, 255, 0.04);
+
+border:
+    1px solid rgba(255, 255, 255, 0.08);
+
+cursor: pointer;
+
+transition:
+    all 0.2s ease;
+
+}
+
+.event-action:hover {
+color: var(--accent);
+
+background:
+    rgba(131, 214, 190, 0.1);
+
+transform: translateY(-1px);
+
+}
+
+.delete-event:hover {
+color: #ff8585;
+
+background:
+    rgba(255, 90, 90, 0.08);
+
+}
+
+.event-action i {
+font-size: 0.75rem;
+}
