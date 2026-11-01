@@ -506,58 +506,377 @@ document
 
 function renderSelectedDayEvents() {
 
-    const title =
-        document.getElementById(
-            "selectedDayTitle"
+const title =
+    document.getElementById(
+        "selectedDayTitle"
+    );
+
+const container =
+    document.getElementById(
+        "selectedDayEvents"
+    );
+
+if (!title || !container) return;
+
+const selectedDateString =
+    getLocalDateString(selectedDate);
+
+title.textContent =
+    formatDate(selectedDateString);
+
+const dayEvents =
+    events
+        .filter(event =>
+            event.date ===
+            selectedDateString
+        )
+        .sort((a, b) =>
+            (a.time || "23:59")
+                .localeCompare(
+                    b.time || "23:59"
+                )
         );
 
-    const container =
-        document.getElementById(
-            "selectedDayEvents"
+if (dayEvents.length === 0) {
+
+    container.innerHTML = `
+        <div class="empty-state">
+            <div class="empty-icon">
+                <i class="fa-regular fa-calendar"></i>
+            </div>
+
+            <div>
+                <h3>Volný den</h3>
+
+                <p>
+                    Pro tento den zatím
+                    nemáte žádné události.
+                </p>
+            </div>
+        </div>
+    `;
+
+    return;
+
+}
+
+container.innerHTML =
+    dayEvents
+        .map(event => {
+
+            const time =
+                event.time ||
+                "Celý den";
+
+            return `
+                <div class="event-card">
+
+                    <div class="event-time">
+                        ${escapeHtml(time)}
+                    </div>
+
+                    <div class="event-info">
+
+                        <h3>
+                            ${escapeHtml(event.title)}
+                        </h3>
+
+                        ${
+                            event.description
+                                ? `
+                                    <p>
+                                        ${escapeHtml(
+                                            event.description
+                                        )}
+                                    </p>
+                                `
+                                : ""
+                        }
+
+                    </div>
+
+                    <div class="event-actions">
+
+                        <button
+                            class="event-action edit-event"
+                            data-event-id="${event.id}"
+                            aria-label="Upravit událost"
+                        >
+                            <i class="fa-solid fa-pen"></i>
+                        </button>
+
+                        <button
+                            class="event-action delete-event"
+                            data-event-id="${event.id}"
+                            aria-label="Odstranit událost"
+                        >
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+
+                    </div>
+
+                </div>
+            `;
+
+        })
+        .join("");
+
+}
+   /* =====================================================
+ÚPRAVA A ODSTRANĚNÍ UDÁLOSTÍ
+===================================================== */
+
+document.addEventListener(
+"click",
+event => {
+
+    const editButton =
+        event.target.closest(
+            ".edit-event"
         );
 
-    if (!title || !container) return;
+    const deleteButton =
+        event.target.closest(
+            ".delete-event"
+        );
 
-    const selectedDateString =
-        getLocalDateString(selectedDate);
 
-    title.textContent =
-        formatDate(selectedDateString);
+    /* ODSTRANĚNÍ UDÁLOSTI */
 
-    const dayEvents =
-        events
-            .filter(event =>
-                event.date ===
-                selectedDateString
-            )
-            .sort((a, b) =>
-                (a.time || "23:59")
-                    .localeCompare(
-                        b.time || "23:59"
-                    )
+    if (deleteButton) {
+
+        const eventId =
+            deleteButton.dataset.eventId;
+
+        const selectedEvent =
+            events.find(
+                item =>
+                    item.id === eventId
             );
 
-    if (dayEvents.length === 0) {
+        if (!selectedEvent) return;
 
-        container.innerHTML = `
-            <div class="empty-state">
-                <div class="empty-icon">
-                    <i class="fa-regular fa-calendar"></i>
-                </div>
-                <div>
-                    <h3>Volný den</h3>
-                    <p>
-                        Pro tento den zatím
-                        nemáte žádné události.
-                    </p>
-                </div>
-            </div>
-        `;
+        const confirmed =
+            confirm(
+                `Opravdu chcete odstranit událost „${selectedEvent.title}“?`
+            );
+
+        if (!confirmed) return;
+
+        events =
+            events.filter(
+                item =>
+                    item.id !== eventId
+            );
+
+        saveEvents();
+
+        renderCalendar();
+        renderSelectedDayEvents();
+        renderHomeEvents();
 
         return;
 
     }
 
+
+    /* ÚPRAVA UDÁLOSTI */
+
+    if (editButton) {
+
+        const eventId =
+            editButton.dataset.eventId;
+
+        const selectedEvent =
+            events.find(
+                item =>
+                    item.id === eventId
+            );
+
+        if (!selectedEvent) return;
+
+        showEditEventForm(
+            selectedEvent
+        );
+
+    }
+
+}
+
+);
+
+function showEditEventForm(
+selectedEvent
+) {
+
+if (!addModal) return;
+
+addModal.classList.remove(
+    "hidden"
+);
+
+const modalContent =
+    addModal.querySelector(
+        ".modal-content"
+    );
+
+if (!modalContent) return;
+
+modalContent.innerHTML = `
+    <button
+        class="close-modal"
+        id="dynamicCloseModal"
+        aria-label="Zavřít"
+    >
+        <i class="fa-solid fa-xmark"></i>
+    </button>
+
+    <div class="modal-heading">
+
+        <span class="section-label">
+            ÚPRAVA UDÁLOSTI
+        </span>
+
+        <h2>Upravit plán</h2>
+
+        <p>
+            Změny se okamžitě uloží
+            do rodinného kalendáře.
+        </p>
+
+    </div>
+
+    <form
+        id="editEventForm"
+        class="app-form"
+    >
+
+        <label>
+            Název události
+
+            <input
+                type="text"
+                name="title"
+                value="${escapeHtml(selectedEvent.title)}"
+                required
+            >
+        </label>
+
+        <label>
+            Datum
+
+            <input
+                type="date"
+                name="date"
+                value="${selectedEvent.date}"
+                required
+            >
+        </label>
+
+        <label>
+            Čas
+
+            <input
+                type="time"
+                name="time"
+                value="${selectedEvent.time || ""}"
+            >
+        </label>
+
+        <label>
+            Poznámka
+
+            <textarea
+                name="description"
+                rows="3"
+            >${escapeHtml(
+                selectedEvent.description || ""
+            )}</textarea>
+        </label>
+
+        <button
+            type="submit"
+            class="form-submit"
+        >
+            <i class="fa-solid fa-check"></i>
+
+            Uložit změny
+        </button>
+
+    </form>
+`;
+
+
+document
+    .getElementById(
+        "dynamicCloseModal"
+    )
+    ?.addEventListener(
+        "click",
+        closeAddModal
+    );
+
+
+document
+    .getElementById(
+        "editEventForm"
+    )
+    ?.addEventListener(
+        "submit",
+        event => {
+
+            event.preventDefault();
+
+            const formData =
+                new FormData(
+                    event.target
+                );
+
+            selectedEvent.title =
+                formData
+                    .get("title")
+                    .trim();
+
+            selectedEvent.date =
+                formData.get("date");
+
+            selectedEvent.time =
+                formData.get("time");
+
+            selectedEvent.description =
+                formData
+                    .get("description")
+                    .trim();
+
+            saveEvents();
+
+            /* Pokud se změnilo datum,
+               přesuneme výběr na nový den */
+
+            selectedDate =
+                new Date(
+                    `${selectedEvent.date}T12:00:00`
+                );
+
+            currentCalendarDate =
+                new Date(
+                    selectedDate.getFullYear(),
+                    selectedDate.getMonth(),
+                    1
+                );
+
+            closeAddModal();
+
+            renderCalendar();
+            renderSelectedDayEvents();
+            renderHomeEvents();
+
+            resetModalContent();
+
+        }
+    );
+
+}
     container.innerHTML =
         dayEvents
             .map(event => {
