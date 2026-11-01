@@ -2077,3 +2077,142 @@ box-shadow:
 .form-submit i {
 margin-right: 6px;
 }
+/* =========================================================
+RODINNÝ ZÁPISNÍK – JEDNODUCHÝ SEZNAM ÚKOLŮ
+========================================================= */
+
+.task-note {
+position: relative;
+
+display: flex;
+align-items: flex-start;
+
+gap: 13px;
+
+padding: 14px 12px 14px 18px;
+
+min-height: 54px;
+
+background:
+    rgba(255, 255, 255, 0.035);
+
+border: none;
+border-bottom:
+    1px solid rgba(255, 255, 255, 0.1);
+
+transition:
+    background 0.2s ease,
+    opacity 0.25s ease;
+
+}
+
+/* Jemná linka jako na papíře */
+.task-note::after {
+content: "";
+
+position: absolute;
+
+left: 0;
+right: 0;
+bottom: 7px;
+
+height: 1px;
+
+background:
+    linear-gradient(
+        90deg,
+        transparent,
+        rgba(131, 214, 190, 0.08),
+        transparent
+    );
+
+pointer-events: none;
+
+}
+
+.task-note:hover {
+background:
+rgba(255, 255, 255, 0.045);
+}
+
+.task-note.completed {
+opacity: 0.45;
+}
+
+.task-note.completed .task-note-title {
+text-decoration: line-through;
+}
+
+.task-note .task-check {
+width: 24px;
+height: 24px;
+
+flex-shrink: 0;
+
+margin-top: 1px;
+
+display: grid;
+place-items: center;
+
+border-radius: 7px;
+
+color: transparent;
+
+background:
+    transparent;
+
+border:
+    1.5px solid rgba(255, 255, 255, 0.35);
+
+cursor: pointer;
+
+transition:
+    all 0.2s ease;
+
+}
+
+.task-note.completed .task-check {
+color: #071b18;
+
+background: var(--accent);
+
+border-color: var(--accent);
+
+}
+
+.task-note .task-check i {
+font-size: 0.68rem;
+}
+
+.task-note-content {
+flex: 1;
+min-width: 0;
+
+padding-top: 2px;
+
+}
+
+.task-note-title {
+font-size: 0.94rem;
+font-weight: 500;
+
+line-height: 1.4;
+
+letter-spacing: 0.01em;
+
+}
+
+.task-note-description {
+margin-top: 4px;
+
+color: var(--text-soft);
+
+font-size: 0.76rem;
+line-height: 1.45;
+
+}
+
+/* Odstranění starého štítku stavu */
+.task-note .task-status {
+display: none;
+}
