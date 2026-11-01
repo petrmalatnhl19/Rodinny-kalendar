@@ -1,36 +1,22 @@
-/* =========================================================
+/* =========================================
 MALÁTOVI – NAŠE DOMÁCNOST
-Moderní rodinný kalendář
-========================================================= */
-
-/* =========================================================
-
-1. PROMĚNNÉ A ZÁKLADNÍ NASTAVENÍ
-   ========================================================= */
+FINÁLNÍ DESIGN
+========================================= */
 
 :root {
---background: #07110f;
---background-deep: #030807;
-
---surface: rgba(13, 30, 26, 0.82);
---surface-light: rgba(255, 255, 255, 0.055);
-
---accent: #83d6be;
---accent-bright: #b4f0d9;
---gold: #e4c77b;
-
---text: #f4f8f6;
---text-soft: #a9bbb5;
---text-muted: #6f817b;
-
---border-light: rgba(255, 255, 255, 0.09);
---border-accent: rgba(131, 214, 190, 0.25);
-
---shadow:
-    0 20px 60px rgba(0, 0, 0, 0.35);
-
+--background: #09111f;
+--background-light: #111d30;
+--panel: rgba(18, 31, 50, 0.82);
+--panel-strong: rgba(24, 40, 63, 0.96);
+--text: #f5f7fb;
+--text-soft: #aeb9ca;
+--accent: #8bb7ff;
+--accent-light: #c8dcff;
+--line: rgba(255, 255, 255, 0.10);
+--success: #8de0b5;
+--danger: #ff9a9a;
+--shadow: 0 20px 60px rgba(0, 0, 0, 0.32);
 --radius: 24px;
-
 }
 
 * {
@@ -38,57 +24,26 @@ Moderní rodinný kalendář
   }
 
 html {
-scroll-behavior: smooth;
+min-height: 100%;
+background: var(--background);
 }
 
 body {
 margin: 0;
-min-width: 320px;
-
+min-height: 100vh;
 color: var(--text);
-
-background:
-    radial-gradient(
-        circle at top,
-        #10241f 0%,
-        var(--background) 45%,
-        var(--background-deep) 100%
-    );
-
-font-family:
-    "DM Sans",
-    sans-serif;
-
--webkit-font-smoothing: antialiased;
-
+font-family: "Inter", sans-serif;
+background: var(--background);
 }
 
-button,
-input,
-textarea,
-select {
-font: inherit;
-}
-
-button {
-border: none;
-cursor: pointer;
-}
-
-button,
-a {
--webkit-tap-highlight-color: transparent;
-}
-
-/* =========================================================
-2. RODINNÁ FOTOGRAFIE V POZADÍ
-========================================================= */
+/* =========================================
+POZADÍ
+========================================= */
 
 .family-background {
 position: fixed;
 inset: 0;
-
-z-index: -3;
+z-index: 0;
 
 background-image:
     url("images/IMG-20261005-WA0004.jpg");
@@ -96,34 +51,33 @@ background-image:
 background-size: cover;
 background-position: center;
 
-opacity: 0.13;
-
-filter:
-    saturate(0.8)
-    contrast(1.05);
-
-transform: scale(1.03);
+opacity: 0.16;
+filter: grayscale(15%);
 
 }
 
 .background-overlay {
 position: fixed;
 inset: 0;
-
-z-index: -2;
+z-index: 1;
 
 background:
+    radial-gradient(
+        circle at top right,
+        rgba(87, 134, 210, 0.20),
+        transparent 38%
+    ),
     linear-gradient(
-        180deg,
-        rgba(3, 8, 7, 0.72),
-        rgba(3, 8, 7, 0.9)
+        135deg,
+        rgba(5, 12, 24, 0.92),
+        rgba(10, 20, 35, 0.86)
     );
 
 }
 
-/* =========================================================
-3. ÚVODNÍ ANIMACE MALÁTOVI
-========================================================= */
+/* =========================================
+ÚVODNÍ LOGO
+========================================= */
 
 .loading-screen {
 position: fixed;
@@ -131,995 +85,782 @@ inset: 0;
 
 z-index: 9999;
 
-display: grid;
-place-items: center;
-
-overflow: hidden;
+display: flex;
+align-items: center;
+justify-content: center;
 
 background:
     radial-gradient(
         circle at center,
-        #15352d 0%,
-        #07110f 45%,
-        #020504 100%
+        #162744,
+        #060b14 75%
     );
 
 transition:
-    opacity 0.8s ease,
-    visibility 0.8s ease;
+    opacity 0.7s ease,
+    visibility 0.7s ease;
+
+animation:
+    loadingFallback 4.5s forwards;
 
 }
 
 .loading-screen.hide {
 opacity: 0;
 visibility: hidden;
-
 pointer-events: none;
-
-}
-
-.loading-glow {
-position: absolute;
-
-width: 320px;
-height: 320px;
-
-border-radius: 50%;
-
-background:
-    radial-gradient(
-        circle,
-        rgba(131, 214, 190, 0.18),
-        transparent 68%
-    );
-
-animation:
-    loadingPulse 3s ease-in-out infinite;
-
 }
 
 .loading-content {
 position: relative;
-
-display: flex;
-align-items: center;
-
-gap: 16px;
-
-flex-wrap: wrap;
-justify-content: center;
-
 text-align: center;
-
 }
 
-.loading-family {
-width: 100%;
+.loading-logo {
+position: relative;
+z-index: 2;
 
-color: var(--text);
+font-family: "Playfair Display", serif;
 
-font-family:
-    "Playfair Display",
-    serif;
+font-size: clamp(2.4rem, 10vw, 4.5rem);
+font-weight: 700;
+letter-spacing: 0.18em;
 
-font-size:
-    clamp(2.4rem, 11vw, 5rem);
-
-font-weight: 600;
-
-letter-spacing: 0.22em;
-
-text-indent: 0.22em;
+color: white;
 
 animation:
-    familyReveal 1.6s ease both;
+    logoAppear 1.4s ease;
 
 }
 
-.loading-subtitle {
-width: 100%;
+.loading-content p {
+position: relative;
+z-index: 2;
 
-color: var(--accent);
+margin: 16px 0 0;
 
-font-size: 0.62rem;
-
-font-weight: 700;
-
+font-size: 0.68rem;
 letter-spacing: 0.38em;
 
-animation:
-    subtitleReveal 2.2s ease both;
+color: var(--accent-light);
 
 }
 
 .loading-line {
-width: 70px;
+width: 0;
 height: 1px;
 
-background:
-    linear-gradient(
-        90deg,
-        transparent,
-        var(--gold),
-        transparent
-    );
+margin: 20px auto 0;
+
+background: var(--accent);
 
 animation:
-    lineGlow 2s ease-in-out infinite;
+    loadingLine 1.8s ease forwards;
 
 }
 
-@keyframes familyReveal {
+.loading-orbit {
+position: absolute;
 
-from {
+width: 190px;
+height: 190px;
+
+top: 50%;
+left: 50%;
+
+border: 1px solid
+    rgba(139, 183, 255, 0.28);
+
+border-radius: 50%;
+
+transform:
+    translate(-50%, -50%);
+
+animation:
+    orbitPulse 2.4s infinite ease-in-out;
+
+}
+
+/* Nouzová CSS pojistka:
+i kdyby JavaScript selhal, logo nezůstane navždy */
+@keyframes loadingFallback {
+0%,
+75% {
+opacity: 1;
+visibility: visible;
+}
+
+100% {
     opacity: 0;
-    transform:
-        translateY(16px);
-    letter-spacing: 0.42em;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+}
+
+@keyframes logoAppear {
+from {
+opacity: 0;
+transform: translateY(12px);
+letter-spacing: 0.35em;
 }
 
 to {
     opacity: 1;
-    transform:
-        translateY(0);
-    letter-spacing: 0.22em;
+    transform: translateY(0);
+    letter-spacing: 0.18em;
 }
 
 }
 
-@keyframes subtitleReveal {
-
-from {
-    opacity: 0;
-    transform:
-        translateY(8px);
-}
-
+@keyframes loadingLine {
 to {
-    opacity: 1;
-    transform:
-        translateY(0);
+width: 120px;
+}
 }
 
-}
-
-@keyframes lineGlow {
-
-0%,
-100% {
-    opacity: 0.35;
-    transform: scaleX(0.8);
-}
-
+@keyframes orbitPulse {
 50% {
-    opacity: 1;
-    transform: scaleX(1);
+transform:
+translate(-50%, -50%)
+scale(1.08);
+
+    opacity: 0.45;
 }
 
 }
 
-@keyframes loadingPulse {
-
-0%,
-100% {
-    transform: scale(0.9);
-    opacity: 0.5;
-}
-
-50% {
-    transform: scale(1.15);
-    opacity: 1;
-}
-
-}
-
-/* =========================================================
-4. HLAVNÍ ROZVRŽENÍ APLIKACE
-========================================================= */
+/* =========================================
+HLAVNÍ APLIKACE
+========================================= */
 
 .app-shell {
+position: relative;
+z-index: 2;
+
 width: 100%;
-max-width: 760px;
+max-width: 900px;
 
 min-height: 100vh;
 
 margin: 0 auto;
 
 padding:
-    24px
-    18px
-    120px;
+    20px 16px 110px;
 
 }
 
+/* =========================================
+HLAVIČKA
+========================================= */
+
+.app-header {
+display: flex;
+align-items: center;
+justify-content: space-between;
+
+padding:
+    8px 4px
+    20px;
+
+}
+
+.brand {
+display: flex;
+align-items: center;
+gap: 12px;
+}
+
+.brand-symbol {
+width: 46px;
+height: 46px;
+
+display: flex;
+align-items: center;
+justify-content: center;
+
+border: 1px solid
+    rgba(139, 183, 255, 0.42);
+
+border-radius: 15px;
+
+background:
+    rgba(139, 183, 255, 0.10);
+
+color: var(--accent-light);
+
+font-family:
+    "Playfair Display",
+    serif;
+
+font-size: 1.5rem;
+
+}
+
+.brand h1 {
+margin: 0;
+
+font-family:
+    "Playfair Display",
+    serif;
+
+font-size: 1.25rem;
+
+letter-spacing: 0.12em;
+
+}
+
+.brand span {
+display: block;
+
+margin-top: 3px;
+
+font-size: 0.72rem;
+
+color: var(--text-soft);
+
+}
+
+.icon-button,
+.month-button {
+border: 1px solid var(--line);
+
+background:
+    rgba(255, 255, 255, 0.06);
+
+color: white;
+
+cursor: pointer;
+
+transition:
+    0.2s ease;
+
+}
+
+.icon-button {
+width: 44px;
+height: 44px;
+
+border-radius: 14px;
+
+font-size: 1.1rem;
+
+}
+
+.icon-button:hover,
+.month-button:hover {
+transform: translateY(-2px);
+
+border-color:
+    rgba(139, 183, 255, 0.5);
+
+}
+
+/* =========================================
+CITÁT
+========================================= */
+
+.quote-panel {
+margin-bottom: 24px;
+
+padding: 18px 20px;
+
+border:
+    1px solid var(--line);
+
+border-radius: var(--radius);
+
+background:
+    rgba(15, 27, 46, 0.65);
+
+backdrop-filter:
+    blur(16px);
+
+box-shadow:
+    var(--shadow);
+
+}
+
+.quote-label,
+.section-eyebrow {
+display: block;
+
+font-size: 0.64rem;
+font-weight: 700;
+
+letter-spacing: 0.16em;
+
+color: var(--accent);
+
+text-transform: uppercase;
+
+}
+
+.quote-panel p {
+margin:
+8px 0 0;
+
+font-family:
+    "Playfair Display",
+    serif;
+
+font-size:
+    clamp(1rem, 3vw, 1.25rem);
+
+line-height: 1.55;
+
+}
+
+/* =========================================
+SEKCE
+========================================= */
+
 .content-section {
 display: none;
-
-animation:
-    sectionReveal 0.45s ease;
-
 }
 
 .content-section.active {
 display: block;
 }
 
-@keyframes sectionReveal {
-
-from {
-    opacity: 0;
-    transform:
-        translateY(10px);
+.dashboard-section {
+margin-top: 28px;
 }
 
-to {
-    opacity: 1;
-    transform:
-        translateY(0);
-}
-
-}
-
-/* =========================================================
-5. HLAVIČKA
-========================================================= */
-
-.app-header {
-margin-bottom: 34px;
-}
-
-.header-top {
+.section-heading {
 display: flex;
-align-items: flex-start;
+align-items: flex-end;
 justify-content: space-between;
 
-gap: 20px;
+gap: 15px;
+
+margin-bottom: 14px;
 
 }
 
-.brand-small,
-.section-label {
-display: block;
-
-color: var(--accent);
-
-font-size: 0.62rem;
-
-font-weight: 700;
-
-letter-spacing: 0.18em;
-
-}
-
-.brand h1 {
-margin: 5px 0 0;
+.section-heading h2,
+.page-heading h2 {
+margin:
+6px 0 0;
 
 font-family:
     "Playfair Display",
     serif;
 
-font-size:
-    clamp(1.8rem, 7vw, 2.7rem);
-
-font-weight: 600;
-
-letter-spacing: 0.08em;
+line-height: 1.2;
 
 }
 
-.header-icon-button {
-position: relative;
-
-width: 46px;
-height: 46px;
-
-display: grid;
-place-items: center;
-
-flex-shrink: 0;
-
-border-radius: 15px;
-
-color: var(--text);
-
-background:
-    rgba(255, 255, 255, 0.05);
-
-border:
-    1px solid var(--border-light);
-
-backdrop-filter: blur(12px);
-
-transition:
-    transform 0.2s ease,
-    background 0.2s ease;
-
-}
-
-.header-icon-button:hover {
-transform:
-translateY(-2px);
-
-background:
-    rgba(131, 214, 190, 0.1);
-
-}
-
-.notification-dot {
-position: absolute;
-
-top: 11px;
-right: 11px;
-
-width: 6px;
-height: 6px;
-
-border-radius: 50%;
-
-background: var(--gold);
-
-box-shadow:
-    0 0 12px
-    rgba(228, 199, 123, 0.8);
-
-}
-
-/* Rodinný citát */
-
-.family-quote-wrap {
-display: flex;
-
-gap: 10px;
-
-align-items: flex-start;
-
-max-width: 620px;
-
-margin-top: 24px;
-padding: 15px 17px;
-
-border-radius: 17px;
-
-background:
-    rgba(255, 255, 255, 0.035);
-
-border:
-    1px solid
-    rgba(255, 255, 255, 0.06);
-
-backdrop-filter:
-    blur(14px);
-
-}
-
-.quote-icon {
-margin-top: 3px;
-
-color: var(--gold);
-
-font-size: 0.7rem;
-
-}
-
-.family-quote-wrap p {
-margin: 0;
-
-color: var(--text-soft);
-
-font-family:
-    "Playfair Display",
-    serif;
-
-font-size: 0.92rem;
-
-line-height: 1.55;
-
-}
-
-/* =========================================================
-6. SPOLEČNÉ KARTY A NADPISY
-========================================================= */
-
-.welcome-card,
-.family-footer-card {
-padding: 24px;
-
-border-radius: var(--radius);
-
-background:
-    linear-gradient(
-        135deg,
-        rgba(18, 48, 40, 0.88),
-        rgba(8, 21, 18, 0.78)
-    );
-
-border:
-    1px solid var(--border-accent);
-
-box-shadow: var(--shadow);
-
-backdrop-filter:
-    blur(18px);
-
-}
-
-.welcome-card {
-position: relative;
-
-overflow: hidden;
-
-}
-
-.welcome-card::after {
-content: "";
-
-position: absolute;
-
-width: 180px;
-height: 180px;
-
-right: -80px;
-top: -90px;
-
-border-radius: 50%;
-
-background:
-    radial-gradient(
-        circle,
-        rgba(131, 214, 190, 0.16),
-        transparent 70%
-    );
-
-pointer-events: none;
-
-}
-
-.welcome-card h2,
-.page-heading h2,
 .section-heading h2 {
-margin: 6px 0 8px;
-
-font-family:
-    "Playfair Display",
-    serif;
-
-font-weight: 600;
-
-line-height: 1.15;
-
-}
-
-.welcome-card h2 {
 font-size:
-clamp(1.55rem, 6vw, 2.2rem);
+clamp(1.3rem, 4vw, 1.7rem);
 }
 
-.welcome-card p,
+.page-heading {
+margin:
+15px 0
+25px;
+}
+
+.page-heading h2 {
+font-size:
+clamp(1.8rem, 6vw, 2.6rem);
+}
+
 .page-heading p {
-margin: 0;
+max-width: 560px;
 
 color: var(--text-soft);
-
-font-size: 0.88rem;
 
 line-height: 1.6;
 
 }
 
-.section-heading {
-display: flex;
+/* =========================================
+UVÍTACÍ KARTA
+========================================= */
 
-align-items: flex-end;
-justify-content: space-between;
+.welcome-card {
+padding: 26px;
 
-gap: 16px;
+border:
+    1px solid var(--line);
 
+border-radius: 28px;
+
+background:
+    linear-gradient(
+        135deg,
+        rgba(32, 54, 86, 0.88),
+        rgba(15, 27, 46, 0.80)
+    );
+
+backdrop-filter:
+    blur(16px);
+
+box-shadow:
+    var(--shadow);
+
+}
+
+.welcome-card h2 {
 margin:
-    38px 0
-    15px;
-
-}
-
-.compact-heading {
-margin-top: 34px;
-}
-
-.section-heading h2 {
-margin-bottom: 0;
-
-font-size:
-    clamp(1.3rem, 5vw, 1.7rem);
-
-}
-
-.page-heading {
-margin-bottom: 30px;
-}
-
-.page-heading h2 {
-font-size:
-clamp(2rem, 8vw, 2.8rem);
-}
-
-.section-add-button {
-width: 42px;
-height: 42px;
-
-display: grid;
-place-items: center;
-
-flex-shrink: 0;
-
-border-radius: 14px;
-
-color: #071512;
-
-background:
-    linear-gradient(
-        135deg,
-        var(--accent-bright),
-        var(--accent)
-    );
-
-box-shadow:
-    0 10px 28px
-    rgba(131, 214, 190, 0.18);
-
-transition:
-    transform 0.2s ease;
-
-}
-
-.section-add-button:hover {
-transform:
-translateY(-2px)
-rotate(4deg);
-}
-
-.text-link-button {
-display: inline-flex;
-
-align-items: center;
-
-gap: 7px;
-
-padding: 8px 0;
-
-color: var(--accent);
-
-background: transparent;
-
-font-size: 0.75rem;
-
-font-weight: 700;
-
-}
-
-.text-link-button i {
-font-size: 0.65rem;
-
-transition:
-    transform 0.2s ease;
-
-}
-
-.text-link-button:hover i {
-transform:
-translateX(3px);
-}
-
-/* =========================================================
-7. UDÁLOSTI
-========================================================= */
-
-.events-list {
-display: grid;
-
-gap: 10px;
-
-}
-
-.event-card {
-display: flex;
-
-align-items: center;
-
-gap: 13px;
-
-padding: 15px;
-
-border-radius: 19px;
-
-background:
-    linear-gradient(
-        135deg,
-        rgba(255, 255, 255, 0.065),
-        rgba(255, 255, 255, 0.025)
-    );
-
-border:
-    1px solid var(--border-light);
-
-backdrop-filter:
-    blur(15px);
-
-box-shadow:
-    0 8px 28px
-    rgba(0, 0, 0, 0.12);
-
-transition:
-    transform 0.2s ease,
-    border-color 0.2s ease;
-
-}
-
-.event-card:hover {
-transform:
-translateY(-2px);
-
-border-color:
-    rgba(131, 214, 190, 0.28);
-
-}
-
-.event-time {
-min-width: 60px;
-
-padding: 9px 7px;
-
-border-radius: 12px;
-
-color: var(--gold);
-
-background:
-    rgba(228, 199, 123, 0.08);
-
-font-size: 0.68rem;
-
-font-weight: 700;
-
-line-height: 1.3;
-
-text-align: center;
-
-}
-
-.event-info {
-flex: 1;
-
-min-width: 0;
-
-}
-
-.event-info h3 {
-margin: 0 0 4px;
-
-font-size: 0.93rem;
-
-font-weight: 600;
-
-}
-
-.event-info p {
-margin: 0;
-
-color: var(--text-soft);
-
-font-size: 0.76rem;
-
-line-height: 1.45;
-
-}
-
-/* Tlačítka úprav události */
-
-.event-actions {
-display: flex;
-
-align-items: center;
-
-gap: 5px;
-
-margin-left: auto;
-
-}
-
-.event-action {
-width: 32px;
-height: 32px;
-
-display: grid;
-place-items: center;
-
-border-radius: 10px;
-
-flex-shrink: 0;
-
-color: var(--text-soft);
-
-background:
-    rgba(255, 255, 255, 0.04);
-
-border:
-    1px solid
-    rgba(255, 255, 255, 0.08);
-
-transition:
-    all 0.2s ease;
-
-}
-
-.event-action:hover {
-color: var(--accent);
-
-background:
-    rgba(131, 214, 190, 0.1);
-
-transform:
-    translateY(-1px);
-
-}
-
-.delete-event:hover {
-color: #ff9696;
-
-background:
-    rgba(255, 90, 90, 0.09);
-
-}
-
-.event-action i {
-font-size: 0.72rem;
-}
-
-/* =========================================================
-8. PRÁZDNÉ STAVY
-========================================================= */
-
-.empty-state,
-.timeline-empty,
-.tasks-empty,
-.upcoming-empty {
-display: flex;
-
-align-items: center;
-
-gap: 14px;
-
-padding: 20px;
-
-border-radius: 19px;
-
-color: var(--text-soft);
-
-background:
-    rgba(255, 255, 255, 0.025);
-
-border:
-    1px dashed
-    rgba(255, 255, 255, 0.1);
-
-}
-
-.empty-state h3,
-.timeline-empty h3 {
-margin: 0 0 4px;
-
-color: var(--text);
-
-font-size: 0.9rem;
-
-}
-
-.empty-state p,
-.timeline-empty p {
-margin: 0;
-
-font-size: 0.76rem;
-
-}
-
-.empty-icon {
-width: 40px;
-height: 40px;
-
-display: grid;
-place-items: center;
-
-flex-shrink: 0;
-
-border-radius: 13px;
-
-color: var(--accent);
-
-background:
-    rgba(131, 214, 190, 0.08);
-
-}
-
-.upcoming-empty {
-justify-content: center;
-
-font-size: 0.82rem;
-
-}
-
-.upcoming-empty i {
-color: var(--gold);
-}
-
-/* =========================================================
-9. KALENDÁŘ
-========================================================= */
-
-.calendar-navigation {
-display: flex;
-
-align-items: center;
-justify-content: space-between;
-
-gap: 12px;
-
-margin-bottom: 24px;
-
-padding: 10px;
-
-border-radius: 20px;
-
-background:
-    rgba(255, 255, 255, 0.035);
-
-border:
-    1px solid var(--border-light);
-
-backdrop-filter:
-    blur(14px);
-
-}
-
-.calendar-navigation h3 {
-margin: 0;
+8px 0;
 
 font-family:
     "Playfair Display",
     serif;
 
 font-size:
-    clamp(1rem, 4vw, 1.3rem);
+    clamp(1.6rem, 6vw, 2.2rem);
+
+}
+
+.welcome-card p {
+margin: 0;
+
+color: var(--text-soft);
+
+}
+
+/* =========================================
+TLAČÍTKA
+========================================= */
+
+.text-button {
+padding: 9px 13px;
+
+border:
+    1px solid
+    rgba(139, 183, 255, 0.30);
+
+border-radius: 12px;
+
+background:
+    rgba(139, 183, 255, 0.10);
+
+color:
+    var(--accent-light);
+
+font-family:
+    inherit;
 
 font-weight: 600;
 
-text-align: center;
+cursor: pointer;
+
+transition: 0.2s ease;
 
 }
 
-.calendar-nav-button {
+.text-button:hover {
+transform:
+translateY(-2px);
+
+background:
+    rgba(139, 183, 255, 0.18);
+
+}
+
+/* =========================================
+UDÁLOSTI
+========================================= */
+
+.events-list {
+display: grid;
+gap: 10px;
+}
+
+.event-card {
+display: flex;
+align-items: center;
+
+gap: 14px;
+
+padding: 15px;
+
+border:
+    1px solid var(--line);
+
+border-radius: 18px;
+
+background:
+    rgba(17, 30, 49, 0.82);
+
+backdrop-filter:
+    blur(12px);
+
+box-shadow:
+    0 10px 30px
+    rgba(0, 0, 0, 0.12);
+
+}
+
+.event-time {
+flex-shrink: 0;
+
+min-width: 55px;
+
+padding: 8px;
+
+border-radius: 10px;
+
+background:
+    rgba(139, 183, 255, 0.13);
+
+color:
+    var(--accent-light);
+
+text-align: center;
+
+font-size: 0.76rem;
+font-weight: 700;
+
+}
+
+.event-info {
+flex: 1;
+min-width: 0;
+}
+
+.event-info h3 {
+margin: 0;
+
+font-size: 0.95rem;
+
+}
+
+.event-info p {
+margin:
+5px 0 0;
+
+color: var(--text-soft);
+
+font-size: 0.78rem;
+
+line-height: 1.4;
+
+}
+
+.event-actions {
+display: flex;
+gap: 5px;
+}
+
+.event-action {
+width: 34px;
+height: 34px;
+
+border:
+    1px solid var(--line);
+
+border-radius: 9px;
+
+background:
+    rgba(255, 255, 255, 0.04);
+
+color:
+    var(--text-soft);
+
+cursor: pointer;
+
+}
+
+.event-action:hover {
+color: white;
+
+border-color:
+    rgba(255, 255, 255, 0.3);
+
+}
+
+/* =========================================
+PRÁZDNÝ STAV
+========================================= */
+
+.empty-state {
+display: flex;
+align-items: center;
+
+gap: 15px;
+
+padding: 20px;
+
+border:
+    1px dashed
+    rgba(255, 255, 255, 0.16);
+
+border-radius: 18px;
+
+background:
+    rgba(9, 17, 31, 0.45);
+
+}
+
+.empty-icon {
 width: 42px;
 height: 42px;
 
-display: grid;
-place-items: center;
+display: flex;
+align-items: center;
+justify-content: center;
 
-border-radius: 14px;
-
-color: var(--text);
-
-background:
-    rgba(255, 255, 255, 0.05);
-
-transition:
-    background 0.2s ease,
-    transform 0.2s ease;
-
-}
-
-.calendar-nav-button:hover {
-color: var(--accent);
+border-radius: 13px;
 
 background:
-    rgba(131, 214, 190, 0.08);
+    rgba(139, 183, 255, 0.10);
 
-transform:
-    scale(1.05);
-
-}
-
-.calendar-weekdays {
-display: grid;
-
-grid-template-columns:
-    repeat(7, 1fr);
-
-gap: 4px;
-
-margin-bottom: 7px;
+color:
+    var(--accent);
 
 }
 
-.calendar-weekdays span {
-color: var(--text-muted);
+.empty-state h3 {
+margin: 0;
 
-font-size: 0.64rem;
-
-font-weight: 700;
-
-text-align: center;
+font-size: 0.9rem;
 
 }
 
+.empty-state p {
+margin:
+5px 0 0;
+
+color:
+    var(--text-soft);
+
+font-size: 0.78rem;
+
+}
+
+/* =========================================
+KALENDÁŘ
+========================================= */
+
+.calendar-card {
+padding: 18px;
+
+border:
+    1px solid var(--line);
+
+border-radius: 26px;
+
+background:
+    rgba(16, 29, 48, 0.88);
+
+backdrop-filter:
+    blur(16px);
+
+box-shadow:
+    var(--shadow);
+
+}
+
+.calendar-header {
+display: flex;
+align-items: center;
+justify-content: space-between;
+
+margin-bottom: 20px;
+
+}
+
+.calendar-header h3 {
+margin: 0;
+
+font-family:
+    "Playfair Display",
+    serif;
+
+text-transform: capitalize;
+
+}
+
+.month-button {
+width: 40px;
+height: 40px;
+
+border-radius: 12px;
+
+font-size: 1.8rem;
+
+line-height: 1;
+
+}
+
+.weekdays,
 .calendar-days {
 display: grid;
 
 grid-template-columns:
     repeat(7, 1fr);
 
-gap: 5px;
+gap: 6px;
 
 }
 
-.calendar-day,
+.weekdays {
+margin-bottom: 8px;
+
+text-align: center;
+
+color:
+    var(--text-soft);
+
+font-size: 0.65rem;
+
+}
+
 .calendar-empty-day {
-aspect-ratio: 1;
-
-min-width: 0;
-
+min-height: 42px;
 }
 
 .calendar-day {
 position: relative;
 
-display: grid;
-place-items: center;
+min-height: 42px;
 
-border-radius: 13px;
+border: none;
 
-color: var(--text);
+border-radius: 12px;
 
 background:
-    rgba(255, 255, 255, 0.025);
+    transparent;
 
-border:
-    1px solid transparent;
+color:
+    var(--text);
 
-font-size: 0.78rem;
+font-family:
+    inherit;
+
+cursor: pointer;
 
 transition:
-    background 0.2s ease,
-    transform 0.2s ease,
-    border-color 0.2s ease;
+    0.2s ease;
 
 }
 
 .calendar-day:hover {
 background:
-rgba(131, 214, 190, 0.09);
-
-transform:
-    translateY(-1px);
-
+rgba(255, 255, 255, 0.07);
 }
 
 .calendar-day.today {
-border-color:
-rgba(228, 199, 123, 0.5);
+color:
+var(--accent-light);
 
-color: var(--gold);
+font-weight: 800;
 
 }
 
 .calendar-day.selected {
-color: #061713;
-
 background:
-    linear-gradient(
-        135deg,
-        var(--accent-bright),
-        var(--accent)
-    );
+var(--accent);
 
-box-shadow:
-    0 7px 18px
-    rgba(131, 214, 190, 0.18);
+color:
+    #09111f;
+
+font-weight: 800;
 
 }
 
@@ -1128,632 +869,245 @@ content: "";
 
 position: absolute;
 
-bottom: 5px;
+width: 5px;
+height: 5px;
 
-width: 4px;
-height: 4px;
+left: 50%;
+bottom: 5px;
 
 border-radius: 50%;
 
-background: var(--gold);
+background:
+    var(--accent);
+
+transform:
+    translateX(-50%);
 
 }
 
-.calendar-day.selected.has-event::after {
-background: #073128;
+.calendar-day.selected::after {
+background:
+#09111f;
 }
 
-.selected-day-section {
-margin-top: 38px;
+.selected-day-panel {
+margin-top: 30px;
 }
 
-/* =========================================================
-10. RODINNÝ ZÁPISNÍK – ÚKOLY
-========================================================= */
+/* =========================================
+ZÁPISNÍK
+========================================= */
 
-.notebook {
+.notebook-paper {
 position: relative;
 
-overflow: hidden;
+padding: 22px;
 
-padding: 20px 16px 12px 24px;
+border-radius: 24px;
 
-border-radius: 10px 24px 24px 10px;
-
-color: #27302c;
+color:
+    #26313e;
 
 background:
     linear-gradient(
         90deg,
-        rgba(228, 215, 181, 0.96),
-        rgba(248, 244, 231, 0.98) 12%,
-        rgba(243, 239, 224, 0.98)
+        transparent 0,
+        transparent 42px,
+        rgba(205, 96, 96, 0.22) 43px,
+        transparent 44px
+    ),
+    repeating-linear-gradient(
+        to bottom,
+        #f7f3e9 0,
+        #f7f3e9 34px,
+        #d7e1ea 35px,
+        #f7f3e9 36px
     );
 
 box-shadow:
-    0 25px 60px
-    rgba(0, 0, 0, 0.3);
-
-}
-
-/* Červená svislá linka zápisníku */
-
-.notebook::before {
-content: "";
-
-position: absolute;
-
-top: 0;
-bottom: 0;
-
-left: 48px;
-
-width: 1px;
-
-background:
-    rgba(193, 93, 83, 0.25);
-
-}
-
-/* Papírová textura */
-
-.notebook::after {
-content: "";
-
-position: absolute;
-inset: 0;
-
-pointer-events: none;
-
-opacity: 0.22;
-
-background:
-    repeating-linear-gradient(
-        0deg,
-        transparent 0,
-        transparent 31px,
-        rgba(83, 111, 155, 0.22) 32px,
-        transparent 33px
-    );
+    0 20px 50px
+    rgba(0, 0, 0, 0.22);
 
 }
 
 .notebook-top {
-position: relative;
-
-z-index: 2;
-
 display: flex;
-
 align-items: center;
 justify-content: space-between;
 
-min-height: 42px;
+gap: 15px;
 
-margin-bottom: 8px;
+margin-bottom: 18px;
 
-}
-
-.notebook-rings {
-display: flex;
-
-gap: 7px;
+padding-left: 28px;
 
 }
 
-.notebook-rings span {
-width: 13px;
-height: 13px;
+.notebook-top span {
+font-size: 0.6rem;
+font-weight: 800;
 
-border-radius: 50%;
+letter-spacing: 0.14em;
 
-background:
-    linear-gradient(
-        135deg,
-        #77827c,
-        #303a35
-    );
-
-box-shadow:
-    inset 0 1px 2px
-    rgba(255, 255, 255, 0.45),
-    0 1px 2px
-    rgba(0, 0, 0, 0.3);
+color:
+    #7d8790;
 
 }
 
-.notebook-add-button {
-position: relative;
-
-z-index: 3;
-
-display: inline-flex;
-
-align-items: center;
-
-gap: 7px;
-
-padding: 9px 13px;
-
-border-radius: 11px;
-
-color: #12382e;
-
-background:
-    rgba(131, 214, 190, 0.45);
-
-border:
-    1px solid
-    rgba(25, 80, 64, 0.12);
-
-font-size: 0.72rem;
-
-font-weight: 700;
-
-transition:
-    transform 0.2s ease;
-
-}
-
-.notebook-add-button:hover {
-transform:
-translateY(-1px);
-}
-
-.notebook-pages {
-position: relative;
-
-z-index: 2;
-
-display: grid;
-
-gap: 0;
-
-min-height: 80px;
-
-}
-
-/* Jeden řádek zápisníku */
-
-.task-note {
-position: relative;
-
-display: flex;
-
-align-items: flex-start;
-
-gap: 12px;
-
-min-height: 48px;
-
-padding:
-    10px
-    8px
-    8px
-    30px;
-
-border-bottom:
-    1px solid
-    rgba(91, 119, 158, 0.22);
-
-transition:
-    background 0.2s ease,
-    opacity 0.25s ease;
-
-}
-
-.task-note:hover {
-background:
-rgba(255, 255, 255, 0.24);
-}
-
-.task-note.completed {
-opacity: 0.48;
-}
-
-.task-note.completed .task-note-title {
-text-decoration: line-through;
-
-text-decoration-thickness: 1px;
-
-}
-
-/* Odškrtávací políčko */
-
-.task-note .task-check {
-width: 21px;
-height: 21px;
-
-display: grid;
-place-items: center;
-
-flex-shrink: 0;
-
-margin-top: 1px;
-
-border-radius: 5px;
-
-color: transparent;
-
-background:
-    rgba(255, 255, 255, 0.35);
-
-border:
-    1.5px solid
-    rgba(45, 63, 55, 0.55);
-
-transition:
-    all 0.2s ease;
-
-}
-
-.task-note.completed .task-check {
-color: #f7f4e8;
-
-background: #397260;
-
-border-color: #397260;
-
-}
-
-.task-note .task-check i {
-font-size: 0.62rem;
-}
-
-.task-note-content {
-flex: 1;
-
-min-width: 0;
-
-padding-top: 1px;
-
-}
-
-.task-note-title {
-color: #26312c;
+.notebook-top h3 {
+margin:
+4px 0 0;
 
 font-family:
     "Playfair Display",
     serif;
 
-font-size: 1rem;
+font-size: 1.4rem;
 
-font-weight: 600;
+}
 
-line-height: 1.35;
+.notebook-add-button {
+padding: 10px 14px;
+
+border:
+    1px solid #d3d9dd;
+
+border-radius: 12px;
+
+background:
+    rgba(255, 255, 255, 0.55);
+
+color:
+    #293747;
+
+font-family:
+    inherit;
+
+font-weight: 700;
+
+cursor: pointer;
+
+}
+
+.notebook-list {
+display: grid;
+gap: 3px;
+}
+
+.task-note {
+display: flex;
+align-items: flex-start;
+
+gap: 13px;
+
+min-height: 48px;
+
+padding:
+    9px 8px 8px
+    28px;
+
+color:
+    #26313e;
+
+}
+
+.task-check {
+width: 23px;
+height: 23px;
+
+flex-shrink: 0;
+
+margin-top: 1px;
+
+border:
+    2px solid #687581;
+
+border-radius: 6px;
+
+background:
+    transparent;
+
+color:
+    transparent;
+
+font-size: 0.72rem;
+
+cursor: pointer;
+
+transition:
+    0.2s ease;
+
+}
+
+.task-note.completed .task-check {
+border-color:
+#557c65;
+
+background:
+    #557c65;
+
+color:
+    white;
+
+}
+
+.task-note-title {
+font-size: 0.95rem;
+
+line-height: 1.5;
 
 }
 
 .task-note-description {
 margin-top: 3px;
 
-color: #68716c;
-
-font-size: 0.73rem;
-
-line-height: 1.4;
-
-}
-
-.notebook .empty-state {
-position: relative;
-
-z-index: 3;
-
-margin: 8px 0;
-
-color: #56615b;
-
-background:
-    rgba(255, 255, 255, 0.25);
-
-border-color:
-    rgba(83, 111, 155, 0.28);
-
-}
-
-.notebook .empty-state h3 {
-color: #26312c;
-}
-
-.notebook .empty-icon {
-color: #397260;
-
-background:
-    rgba(57, 114, 96, 0.1);
-
-}
-
-/* Náhled zápisníku na domovské stránce */
-
-.notebook-preview {
-position: relative;
-
-overflow: hidden;
-
-padding: 10px 10px 10px 12px;
-
-border-radius: 15px;
-
-color: #29332e;
-
-background:
-    linear-gradient(
-        90deg,
-        #ece5d0,
-        #faf6e9
-    );
-
-box-shadow:
-    0 12px 35px
-    rgba(0, 0, 0, 0.2);
-
-}
-
-.notebook-preview::before {
-content: "";
-
-position: absolute;
-
-top: 0;
-bottom: 0;
-
-left: 26px;
-
-width: 1px;
-
-background:
-    rgba(193, 93, 83, 0.22);
-
-}
-
-.notebook-preview .task-note {
-padding-left: 25px;
-
-min-height: 44px;
-
-}
-
-.notebook-preview .task-note-title {
-font-size: 0.88rem;
-}
-
-/* =========================================================
-11. RODINNÁ KARTA DOLE
-========================================================= */
-
-.family-footer-card {
-display: flex;
-
-align-items: center;
-
-gap: 16px;
-
-margin-top: 34px;
-
-padding: 20px;
-
-}
-
-.family-footer-icon {
-width: 45px;
-height: 45px;
-
-display: grid;
-place-items: center;
-
-flex-shrink: 0;
-
-border-radius: 15px;
-
-color: var(--gold);
-
-background:
-    rgba(228, 199, 123, 0.09);
-
-}
-
-.family-footer-card h3 {
-margin: 0 0 5px;
-
-font-family:
-    "Playfair Display",
-    serif;
-
-font-size: 1rem;
-
-}
-
-.family-footer-card p {
-margin: 0;
-
-color: var(--text-soft);
+color:
+    #69737c;
 
 font-size: 0.76rem;
 
-line-height: 1.5;
+}
+
+.task-note.completed .task-note-title,
+.task-note.completed .task-note-description {
+opacity: 0.5;
+
+text-decoration:
+    line-through;
 
 }
 
-/* =========================================================
-12. SPODNÍ NAVIGACE
-========================================================= */
-
-.bottom-navigation {
-position: fixed;
-
-left: 50%;
-bottom: 14px;
-
-z-index: 100;
-
-width:
-    min(
-        calc(100% - 24px),
-        720px
-    );
-
-transform:
-    translateX(-50%);
-
-display: flex;
-
-align-items: flex-end;
-justify-content: space-around;
-
-padding:
-    9px
-    7px;
-
-border-radius: 25px;
-
-background:
-    rgba(8, 20, 17, 0.84);
-
-border:
-    1px solid
-    rgba(255, 255, 255, 0.09);
-
-box-shadow:
-    0 15px 45px
-    rgba(0, 0, 0, 0.38);
-
-backdrop-filter:
-    blur(20px);
-
-}
-
-.bottom-nav-item {
-position: relative;
-
-display: flex;
-
-flex-direction: column;
-align-items: center;
-
-gap: 5px;
-
-min-width: 55px;
-
-padding: 7px 5px;
-
-color: var(--text-muted);
-
-background: transparent;
-
-font-size: 0.58rem;
-
-transition:
-    color 0.2s ease,
-    transform 0.2s ease;
-
-}
-
-.bottom-nav-item i {
-font-size: 1rem;
-}
-
-.bottom-nav-item.active {
-color: var(--accent);
-}
-
-.bottom-nav-item.active::before {
-content: "";
-
-position: absolute;
-
-top: 1px;
-
-width: 18px;
-height: 2px;
-
-border-radius: 2px;
-
-background: var(--accent);
-
-box-shadow:
-    0 0 10px
-    rgba(131, 214, 190, 0.7);
-
-}
-
-.floating-add-button {
-width: 58px;
-height: 58px;
-
-display: grid;
-place-items: center;
-
-margin-top: -28px;
-
-flex-shrink: 0;
-
-border-radius: 20px;
-
-color: #082019;
-
-background:
-    linear-gradient(
-        135deg,
-        var(--accent-bright),
-        var(--accent)
-    );
-
-border:
-    4px solid #0a1815;
-
-box-shadow:
-    0 10px 30px
-    rgba(131, 214, 190, 0.3);
-
-font-size: 1.1rem;
-
-transition:
-    transform 0.25s ease;
-
-}
-
-.floating-add-button:hover {
-transform:
-translateY(-4px)
-rotate(90deg);
-}
-
-/* =========================================================
-13. MODÁLNÍ OKNO
-========================================================= */
+/* =========================================
+MODÁLNÍ OKNO
+========================================= */
 
 .modal {
 position: fixed;
-
 inset: 0;
 
-z-index: 1000;
+z-index: 5000;
 
-display: grid;
-place-items: end center;
+display: flex;
+align-items: flex-end;
+justify-content: center;
 
 transition:
-    opacity 0.25s ease,
-    visibility 0.25s ease;
+    opacity 0.25s ease;
 
 }
 
 .modal.hidden {
 opacity: 0;
 visibility: hidden;
-
 pointer-events: none;
-
 }
 
 .modal-backdrop {
 position: absolute;
-
 inset: 0;
 
 background:
-    rgba(0, 0, 0, 0.68);
+    rgba(0, 0, 0, 0.65);
 
 backdrop-filter:
     blur(6px);
@@ -1763,64 +1117,28 @@ backdrop-filter:
 .modal-content {
 position: relative;
 
-z-index: 2;
-
 width: 100%;
+max-width: 620px;
 
-max-width: 760px;
-
-max-height: 90vh;
+max-height: 92vh;
 
 overflow-y: auto;
 
-padding:
-    30px
-    22px
-    34px;
-
-border-radius:
-    30px 30px 0 0;
-
-color: var(--text);
-
-background:
-    linear-gradient(
-        180deg,
-        #112621,
-        #07110f
-    );
+padding: 28px 20px
+    calc(28px + env(safe-area-inset-bottom));
 
 border:
-    1px solid
-    rgba(255, 255, 255, 0.09);
+    1px solid var(--line);
+
+border-radius:
+    28px 28px 0 0;
+
+background:
+    #121f32;
 
 box-shadow:
-    0 -15px 50px
-    rgba(0, 0, 0, 0.35);
-
-animation:
-    modalReveal 0.35s ease;
-
-}
-
-.modal.hidden .modal-content {
-transform:
-translateY(30px);
-}
-
-@keyframes modalReveal {
-
-from {
-    opacity: 0;
-    transform:
-        translateY(30px);
-}
-
-to {
-    opacity: 1;
-    transform:
-        translateY(0);
-}
+    0 -20px 60px
+    rgba(0, 0, 0, 0.4);
 
 }
 
@@ -1833,119 +1151,97 @@ right: 16px;
 width: 38px;
 height: 38px;
 
-display: grid;
-place-items: center;
+border:
+    1px solid var(--line);
 
-border-radius: 13px;
-
-color: var(--text-soft);
+border-radius: 12px;
 
 background:
-    rgba(255, 255, 255, 0.05);
+    rgba(255, 255, 255, 0.06);
+
+color: white;
+
+font-size: 1.1rem;
+
+cursor: pointer;
 
 }
 
 .modal-heading {
 margin-bottom: 24px;
 
-padding-right: 40px;
+padding-right: 45px;
 
 }
 
 .modal-heading h2 {
 margin:
-6px 0
-8px;
+8px 0;
 
 font-family:
     "Playfair Display",
     serif;
-
-font-size:
-    clamp(1.6rem, 7vw, 2.1rem);
 
 }
 
 .modal-heading p {
 margin: 0;
 
-color: var(--text-soft);
+color:
+    var(--text-soft);
 
-font-size: 0.84rem;
-
-line-height: 1.55;
+line-height: 1.5;
 
 }
 
 .add-options {
 display: grid;
-
-gap: 10px;
-
+gap: 12px;
 }
 
 .add-option {
 display: flex;
-
 align-items: center;
 
-gap: 14px;
+gap: 15px;
 
 width: 100%;
 
 padding: 16px;
 
-border-radius: 19px;
+border:
+    1px solid var(--line);
 
-color: var(--text);
-
-text-align: left;
+border-radius: 18px;
 
 background:
     rgba(255, 255, 255, 0.04);
 
-border:
-    1px solid
-    rgba(255, 255, 255, 0.08);
+color: white;
 
-transition:
-    transform 0.2s ease,
-    background 0.2s ease;
+text-align: left;
 
-}
-
-.add-option:hover {
-transform:
-translateX(3px);
-
-background:
-    rgba(131, 214, 190, 0.07);
+cursor: pointer;
 
 }
 
 .add-option-icon {
-width: 43px;
-height: 43px;
+width: 46px;
+height: 46px;
 
-display: grid;
-place-items: center;
-
-flex-shrink: 0;
+display: flex;
+align-items: center;
+justify-content: center;
 
 border-radius: 14px;
 
-color: var(--accent);
-
 background:
-    rgba(131, 214, 190, 0.1);
+    rgba(139, 183, 255, 0.13);
 
-}
+color:
+    var(--accent-light);
 
-.task-icon {
-color: var(--gold);
-
-background:
-    rgba(228, 199, 123, 0.1);
+font-size: 1.2rem;
 
 }
 
@@ -1954,247 +1250,250 @@ flex: 1;
 }
 
 .add-option-text h3 {
-margin: 0 0 4px;
+margin: 0;
 
-font-size: 0.92rem;
+font-size: 0.95rem;
 
 }
 
 .add-option-text p {
-margin: 0;
+margin:
+4px 0 0;
 
-color: var(--text-soft);
+color:
+    var(--text-soft);
 
-font-size: 0.74rem;
-
-}
-
-.add-option > i {
-color: var(--text-muted);
-
-font-size: 0.72rem;
+font-size: 0.76rem;
 
 }
 
-/* =========================================================
-14. FORMULÁŘE
-========================================================= */
+/* =========================================
+FORMULÁŘ
+========================================= */
 
 .app-form {
 display: grid;
-
-gap: 16px;
-
+gap: 17px;
 }
 
 .app-form label {
 display: grid;
+gap: 8px;
 
-gap: 7px;
+color:
+    var(--text-soft);
 
-color: var(--text-soft);
-
-font-size: 0.76rem;
-
+font-size: 0.78rem;
 font-weight: 600;
 
 }
 
 .app-form input,
-.app-form textarea,
-.app-form select {
+.app-form textarea {
 width: 100%;
 
-padding: 13px 14px;
-
-outline: none;
-
-border-radius: 14px;
-
-color: var(--text);
-
-background:
-    rgba(255, 255, 255, 0.055);
+padding: 14px;
 
 border:
     1px solid
-    rgba(255, 255, 255, 0.1);
+    rgba(255, 255, 255, 0.12);
 
-transition:
-    border-color 0.2s ease,
-    background 0.2s ease;
+border-radius: 13px;
+
+outline: none;
+
+background:
+    rgba(255, 255, 255, 0.06);
+
+color: white;
+
+font-family:
+    inherit;
+
+font-size: 1rem;
 
 }
 
 .app-form textarea {
-resize: vertical;
+min-height: 100px;
 
-min-height: 90px;
+resize: vertical;
 
 }
 
 .app-form input:focus,
-.app-form textarea:focus,
-.app-form select:focus {
+.app-form textarea:focus {
 border-color:
-rgba(131, 214, 190, 0.6);
+var(--accent);
 
-background:
-    rgba(131, 214, 190, 0.06);
+box-shadow:
+    0 0 0 3px
+    rgba(139, 183, 255, 0.10);
 
-}
-
-.app-form select {
-color-scheme: dark;
 }
 
 .form-submit {
-width: 100%;
-
-margin-top: 5px;
-
 padding: 15px;
 
-border-radius: 16px;
+border: none;
 
-color: #061b16;
+border-radius: 14px;
 
 background:
     linear-gradient(
         135deg,
-        var(--accent-bright),
-        var(--accent)
+        #8bb7ff,
+        #6c95d8
     );
+
+color:
+    #07111f;
+
+font-family:
+    inherit;
 
 font-weight: 800;
 
-box-shadow:
-    0 12px 30px
-    rgba(131, 214, 190, 0.16);
-
-transition:
-    transform 0.2s ease;
+cursor: pointer;
 
 }
 
-.form-submit:hover {
-transform:
-translateY(-2px);
-}
-
-.form-submit i {
-margin-right: 7px;
-}
-
-/* =========================================================
-15. MOBILNÍ ÚPRAVY
-========================================================= */
-
-@media (max-width: 380px) {
-
-.app-shell {
-    padding-left: 13px;
-    padding-right: 13px;
-}
-
-.event-actions {
-    flex-direction: column;
-}
-
-.event-card {
-    align-items: flex-start;
-}
-
-.bottom-nav-item {
-    min-width: 45px;
-
-    font-size: 0.53rem;
-}
+/* =========================================
+SPODNÍ NAVIGACE
+========================================= */
 
 .bottom-navigation {
-    width:
-        calc(100% - 14px);
+position: fixed;
+
+left: 50%;
+bottom: 12px;
+
+z-index: 100;
+
+width:
+    min(
+        calc(100% - 24px),
+        700px
+    );
+
+display: grid;
+
+grid-template-columns:
+    repeat(5, 1fr);
+
+align-items: center;
+
+padding: 8px;
+
+border:
+    1px solid var(--line);
+
+border-radius: 24px;
+
+background:
+    rgba(12, 22, 38, 0.90);
+
+backdrop-filter:
+    blur(20px);
+
+box-shadow:
+    var(--shadow);
+
+transform:
+    translateX(-50%);
+
 }
 
-.notebook-rings span {
-    width: 10px;
-    height: 10px;
-}
+.nav-button {
+display: grid;
+
+gap: 4px;
+
+border: none;
+
+background:
+    transparent;
+
+color:
+    var(--text-soft);
+
+font-family:
+    inherit;
+
+font-size: 0.62rem;
+
+cursor: pointer;
 
 }
 
-/* =========================================================
-16. VĚTŠÍ OBRAZOVKY
-========================================================= */
+.nav-icon {
+font-size: 1.15rem;
+}
+
+.nav-button.active {
+color:
+var(--accent-light);
+}
+
+.add-main-button {
+width: 54px;
+height: 54px;
+
+justify-self: center;
+
+margin-top: -25px;
+
+border:
+    5px solid #101a2b;
+
+border-radius: 50%;
+
+background:
+    linear-gradient(
+        135deg,
+        #a4c7ff,
+        #739bdf
+    );
+
+color:
+    #07111f;
+
+font-size: 2rem;
+
+line-height: 1;
+
+cursor: pointer;
+
+box-shadow:
+    0 10px 30px
+    rgba(90, 130, 200, 0.35);
+
+}
+
+/* =========================================
+RESPONSIVE
+========================================= */
 
 @media (min-width: 700px) {
 
 .app-shell {
     padding:
-        40px
-        30px
-        130px;
+        35px 30px 120px;
 }
 
-.app-header {
-    margin-bottom: 44px;
+
+.event-card {
+    padding: 18px;
 }
 
-.calendar-days {
-    gap: 8px;
+
+.modal {
+    align-items: center;
 }
 
-.calendar-day {
-    border-radius: 17px;
-
-    font-size: 0.9rem;
-}
 
 .modal-content {
-    margin-bottom: 0;
-
-    border-radius:
-        30px 30px 0 0;
-
-    padding:
-        36px
-        40px
-        42px;
+    border-radius: 28px;
 }
 
-}
-
-/* =========================================================
-17. PŘÍSTUPNOST – OMEZENÍ ANIMACÍ
-========================================================= */
-
-@media (prefers-reduced-motion: reduce) {
-
-*,
-*::before,
-*::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-
-    scroll-behavior: auto !important;
-
-    transition-duration: 0.01ms !important;
-}
-
-}
-/* =========================================
-   OPRAVA ÚVODNÍ NAČÍTACÍ OBRAZOVKY
-========================================= */
-
-#loadingScreen {
-    position: fixed;
-    inset: 0;
-    z-index: 99999;
-    transition: opacity 0.8s ease, visibility 0.8s ease;
-}
-
-#loadingScreen.hide {
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
 }
