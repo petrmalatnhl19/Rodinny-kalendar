@@ -2182,3 +2182,19 @@ margin-right: 7px;
 }
 
 }
+/* =========================================
+   OPRAVA ÚVODNÍ NAČÍTACÍ OBRAZOVKY
+========================================= */
+
+#loadingScreen {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    transition: opacity 0.8s ease, visibility 0.8s ease;
+}
+
+#loadingScreen.hide {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
