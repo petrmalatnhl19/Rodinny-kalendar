@@ -1,20 +1,21 @@
-/* =========================================================
+"use strict";
+
+/* =========================================
 MALÁTOVI – NAŠE DOMÁCNOST
-Hlavní funkce aplikace
-========================================================= */
+HLAVNÍ APLIKACE
+========================================= */
 
-/* =========================================================
-
-1. ZÁKLADNÍ DATA
-   ========================================================= */
+/* =========================================
+ZÁKLADNÍ DATA
+========================================= */
 
 const quotes = [
 "Domov není místo. Domov jsou lidé, které máme rádi.",
 "Rodina je místo, kde začíná život a nikdy nekončí láska.",
-"Nejkrásnější chvíle nejsou ty, které prožijeme sami, ale společně.",
+"Nejkrásnější chvíle jsou ty, které prožijeme společně.",
 "Štěstí domova se skládá z malých společných okamžiků.",
-"Rodina znamená mít někoho, kdo s tebou sdílí včerejšek, dnešek i zítřek.",
-"Tam, kde jsme spolu, je náš domov."
+"Tam, kde jsme spolu, je náš domov.",
+"Rodina proměňuje obyčejné dny v důležité vzpomínky."
 ];
 
 let events = [];
@@ -23,54 +24,18 @@ let tasks = [];
 let currentCalendarDate = new Date();
 let selectedDate = new Date();
 
-/* =========================================================
-2. NAČTENÍ A ULOŽENÍ DAT
-========================================================= */
+/* =========================================
+POMOCNÉ FUNKCE
+========================================= */
 
-function loadData() {
-
-const savedEvents = localStorage.getItem("malatoviEvents");
-const savedTasks = localStorage.getItem("malatoviTasks");
-
-if (savedEvents) {
-    try {
-        events = JSON.parse(savedEvents);
-    } catch (error) {
-        events = [];
-    }
+function createId() {
+return "${Date.now()}-${Math.random() .toString(36) .substring(2, 10)}";
 }
-
-if (savedTasks) {
-    try {
-        tasks = JSON.parse(savedTasks);
-    } catch (error) {
-        tasks = [];
-    }
-}
-
-}
-
-function saveData() {
-
-localStorage.setItem(
-    "malatoviEvents",
-    JSON.stringify(events)
-);
-
-localStorage.setItem(
-    "malatoviTasks",
-    JSON.stringify(tasks)
-);
-
-}
-
-/* =========================================================
-3. POMOCNÉ FUNKCE PRO DATUM
-========================================================= */
 
 function getDateKey(date) {
 
 const year = date.getFullYear();
+
 const month = String(
     date.getMonth() + 1
 ).padStart(2, "0");
@@ -80,6 +45,29 @@ const day = String(
 ).padStart(2, "0");
 
 return `${year}-${month}-${day}`;
+
+}
+
+function dateFromKey(dateKey) {
+
+if (!dateKey) {
+    return new Date();
+}
+
+return new Date(
+    `${dateKey}T12:00:00`
+);
+
+}
+
+function escapeHTML(value) {
+
+return String(value || "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
 
 }
 
@@ -97,11 +85,7 @@ return new Intl.DateTimeFormat(
 
 }
 
-function formatShortDate(dateString) {
-
-const date = new Date(
-    `${dateString}T00:00:00`
-);
+function formatShortDate(dateKey) {
 
 return new Intl.DateTimeFormat(
     "cs-CZ",
@@ -109,7 +93,9 @@ return new Intl.DateTimeFormat(
         day: "numeric",
         month: "long"
     }
-).format(date);
+).format(
+    dateFromKey(dateKey)
+);
 
 }
 
@@ -120,48 +106,176 @@ return getDateKey(date) ===
 
 }
 
-function createId() {
+function sortEvents(eventList) {
 
-return `${Date.now()}-${Math.random()
-    .toString(36)
-    .substring(2, 9)}`;
+return [...eventList].sort(
+    (a, b) => {
+
+        const dateCompare =
+            a.date.localeCompare(
+                b.date
+            );
+
+        if (dateCompare !== 0) {
+            return dateCompare;
+        }
+
+        return (
+            a.time || "99:99"
+        ).localeCompare(
+            b.time || "99:99"
+        );
+
+    }
+);
 
 }
 
-function escapeHTML(value = "") {
+/* =========================================
+ULOŽENÍ DAT
+========================================= */
 
-return String(value)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
+function loadData() {
+
+try {
+
+    const savedEvents =
+        localStorage.getItem(
+            "malatovi_events"
+        );
+
+    const savedTasks =
+        localStorage.getItem(
+            "malatovi_tasks"
+        );
+
+
+    events = savedEvents
+        ? JSON.parse(savedEvents)
+        : [];
+
+    tasks = savedTasks
+        ? JSON.parse(savedTasks)
+        : [];
+
+
+    if (!Array.isArray(events)) {
+        events = [];
+    }
+
+    if (!Array.isArray(tasks)) {
+        tasks = [];
+    }
+
+} catch (error) {
+
+    console.error(
+        "Nepodařilo se načíst data:",
+        error
+    );
+
+    events = [];
+    tasks = [];
 
 }
 
-/* =========================================================
-4. HLAVIČKA A CITÁTY
-========================================================= */
+}
+
+function saveData() {
+
+try {
+
+    localStorage.setItem(
+        "malatovi_events",
+        JSON.stringify(events)
+    );
+
+    localStorage.setItem(
+        "malatovi_tasks",
+        JSON.stringify(tasks)
+    );
+
+} catch (error) {
+
+    console.error(
+        "Nepodařilo se uložit data:",
+        error
+    );
+
+}
+
+}
+
+/* =========================================
+ÚVODNÍ OBRAZOVKA
+========================================= */
+
+function hideLoadingScreen() {
+
+const loadingScreen =
+    document.getElementById(
+        "loadingScreen"
+    );
+
+if (!loadingScreen) {
+    return;
+}
+
+
+setTimeout(() => {
+
+    loadingScreen.classList.add(
+        "hide"
+    );
+
+    setTimeout(() => {
+
+        if (loadingScreen.parentNode) {
+
+            loadingScreen.style.display =
+                "none";
+
+        }
+
+    }, 800);
+
+}, 1800);
+
+}
+
+/* =========================================
+HLAVIČKA
+========================================= */
 
 function renderHeader() {
 
-const currentDateElement =
-    document.getElementById("currentDate");
+const dateElement =
+    document.getElementById(
+        "currentDate"
+    );
 
 const quoteElement =
-    document.getElementById("familyQuote");
+    document.getElementById(
+        "familyQuote"
+    );
 
-const todayMessage =
-    document.getElementById("todayMessage");
+const messageElement =
+    document.getElementById(
+        "todayMessage"
+    );
 
-if (currentDateElement) {
-    currentDateElement.textContent =
+
+if (dateElement) {
+
+    dateElement.textContent =
         formatDate(new Date());
+
 }
+
 
 if (quoteElement) {
 
-    const randomQuote =
+    const quote =
         quotes[
             Math.floor(
                 Math.random() *
@@ -170,76 +284,99 @@ if (quoteElement) {
         ];
 
     quoteElement.textContent =
-        `„${randomQuote}“`;
+        `„${quote}“`;
+
 }
 
-if (todayMessage) {
+
+if (messageElement) {
 
     const todayKey =
         getDateKey(new Date());
 
-    const todayEvents =
+    const count =
         events.filter(
             event =>
                 event.date === todayKey
-        );
+        ).length;
 
-    if (todayEvents.length === 0) {
-        todayMessage.textContent =
+
+    if (count === 0) {
+
+        messageElement.textContent =
             "Dnes máme prostor pro společné chvíle.";
-    } else if (todayEvents.length === 1) {
-        todayMessage.textContent =
-            "Dnes nás čeká jedna důležitá věc.";
+
+    } else if (count === 1) {
+
+        messageElement.textContent =
+            "Dnes nás čeká jedna důležitá událost.";
+
     } else {
-        todayMessage.textContent =
-            `Dnes nás čekají ${todayEvents.length} události.`;
+
+        messageElement.textContent =
+            `Dnes nás čekají ${count} události.`;
+
     }
 
 }
 
 }
 
-/* =========================================================
-5. VYKRESLENÍ UDÁLOSTÍ
-========================================================= */
+/* =========================================
+UDÁLOSTI
+========================================= */
 
-function createEmptyEventsMessage(
-title,
-description
-) {
+function emptyState(title, text) {
 
 return `
     <div class="empty-state">
+
         <div class="empty-icon">
-            <i class="fa-regular fa-calendar"></i>
+            ◌
         </div>
 
         <div>
-            <h3>${title}</h3>
-            <p>${description}</p>
+            <h3>
+                ${escapeHTML(title)}
+            </h3>
+
+            <p>
+                ${escapeHTML(text)}
+            </p>
         </div>
+
     </div>
 `;
 
 }
 
-function createEventCard(event) {
+function eventCard(event, showDate = false) {
 
 const time =
-    event.time
-        ? event.time
-        : "Celý den";
+    event.time || "Celý den";
+
+const descriptionParts = [];
+
+if (showDate) {
+    descriptionParts.push(
+        formatShortDate(event.date)
+    );
+}
+
+if (event.description) {
+    descriptionParts.push(
+        event.description
+    );
+}
 
 const description =
-    event.description
-        ? escapeHTML(event.description)
+    descriptionParts.length > 0
+        ? descriptionParts.join(" · ")
         : "Rodinná událost";
 
+
 return `
-    <article
-        class="event-card"
-        data-event-id="${event.id}"
-    >
+    <article class="event-card">
 
         <div class="event-time">
             ${escapeHTML(time)}
@@ -252,7 +389,7 @@ return `
             </h3>
 
             <p>
-                ${description}
+                ${escapeHTML(description)}
             </p>
 
         </div>
@@ -260,21 +397,23 @@ return `
         <div class="event-actions">
 
             <button
-                class="event-action edit-event"
-                data-event-id="${event.id}"
-                aria-label="Upravit událost"
+                class="event-action"
+                type="button"
+                data-action="edit-event"
+                data-id="${escapeHTML(event.id)}"
                 title="Upravit"
             >
-                <i class="fa-solid fa-pen"></i>
+                ✎
             </button>
 
             <button
-                class="event-action delete-event"
-                data-event-id="${event.id}"
-                aria-label="Smazat událost"
+                class="event-action"
+                type="button"
+                data-action="delete-event"
+                data-id="${escapeHTML(event.id)}"
                 title="Smazat"
             >
-                <i class="fa-solid fa-trash"></i>
+                ×
             </button>
 
         </div>
@@ -287,31 +426,31 @@ return `
 function renderTodayEvents() {
 
 const container =
-    document.getElementById("todayEvents");
+    document.getElementById(
+        "todayEvents"
+    );
 
-if (!container) return;
+if (!container) {
+    return;
+}
+
 
 const todayKey =
     getDateKey(new Date());
 
 const todayEvents =
-    events
-        .filter(
+    sortEvents(
+        events.filter(
             event =>
                 event.date === todayKey
         )
-        .sort(
-            (a, b) =>
-                (a.time || "99:99")
-                .localeCompare(
-                    b.time || "99:99"
-                )
-        );
+    );
+
 
 if (todayEvents.length === 0) {
 
     container.innerHTML =
-        createEmptyEventsMessage(
+        emptyState(
             "Dnes zatím nic nemáme",
             "Užijte si společný den."
         );
@@ -319,9 +458,13 @@ if (todayEvents.length === 0) {
     return;
 }
 
+
 container.innerHTML =
     todayEvents
-        .map(createEventCard)
+        .map(
+            event =>
+                eventCard(event)
+        )
         .join("");
 
 }
@@ -329,78 +472,83 @@ container.innerHTML =
 function renderUpcomingEvents() {
 
 const container =
-    document.getElementById("upcomingEvents");
+    document.getElementById(
+        "upcomingEvents"
+    );
 
-if (!container) return;
+if (!container) {
+    return;
+}
+
 
 const todayKey =
     getDateKey(new Date());
 
-const upcomingEvents =
-    events
-        .filter(
+const upcoming =
+    sortEvents(
+        events.filter(
             event =>
                 event.date > todayKey
         )
-        .sort(
-            (a, b) =>
-                a.date.localeCompare(b.date) ||
-                (a.time || "99:99")
-                .localeCompare(
-                    b.time || "99:99"
-                )
-        )
-        .slice(0, 5);
+    ).slice(0, 6);
 
-if (upcomingEvents.length === 0) {
 
-    container.innerHTML = `
-        <div class="upcoming-empty">
-            <i class="fa-regular fa-calendar"></i>
-            Žádné další události zatím nejsou naplánované.
-        </div>
-    `;
+if (upcoming.length === 0) {
+
+    container.innerHTML =
+        emptyState(
+            "Nic dalšího zatím není naplánováno",
+            "Novou událost můžete přidat tlačítkem plus."
+        );
 
     return;
 }
 
+
 container.innerHTML =
-    upcomingEvents
-        .map(event => {
-
-            return createEventCard({
-                ...event,
-                description:
-                    `${formatShortDate(event.date)} · ` +
-                    (event.description || "")
-            });
-
-        })
+    upcoming
+        .map(
+            event =>
+                eventCard(
+                    event,
+                    true
+                )
+        )
         .join("");
 
 }
 
-/* =========================================================
-6. KALENDÁŘ
-========================================================= */
+/* =========================================
+KALENDÁŘ
+========================================= */
 
 function renderCalendar() {
 
 const monthElement =
-    document.getElementById("calendarMonth");
+    document.getElementById(
+        "calendarMonth"
+    );
 
 const daysContainer =
-    document.getElementById("calendarDays");
+    document.getElementById(
+        "calendarDays"
+    );
 
-if (!monthElement || !daysContainer) {
+
+if (
+    !monthElement ||
+    !daysContainer
+) {
     return;
 }
+
 
 const year =
     currentCalendarDate.getFullYear();
 
 const month =
     currentCalendarDate.getMonth();
+
 
 monthElement.textContent =
     new Intl.DateTimeFormat(
@@ -409,31 +557,34 @@ monthElement.textContent =
             month: "long",
             year: "numeric"
         }
-    ).format(currentCalendarDate);
+    ).format(
+        currentCalendarDate
+    );
 
 
 const firstDay =
-    new Date(year, month, 1);
+    new Date(
+        year,
+        month,
+        1
+    );
 
 const lastDay =
-    new Date(year, month + 1, 0);
+    new Date(
+        year,
+        month + 1,
+        0
+    );
 
-/*
-   JavaScript má neděli jako 0.
-   Převádíme na pondělí jako první den.
-*/
 
 const startingDay =
-    (firstDay.getDay() + 6) % 7;
-
-const totalDays =
-    lastDay.getDate();
-
-
-let calendarHTML = "";
+    (
+        firstDay.getDay() + 6
+    ) % 7;
 
 
-/* Prázdná místa před prvním dnem */
+let html = "";
+
 
 for (
     let i = 0;
@@ -441,25 +592,28 @@ for (
     i++
 ) {
 
-    calendarHTML +=
+    html +=
         `<div class="calendar-empty-day"></div>`;
 
 }
 
 
-/* Jednotlivé dny */
-
 for (
     let day = 1;
-    day <= totalDays;
+    day <= lastDay.getDate();
     day++
 ) {
 
     const date =
-        new Date(year, month, day);
+        new Date(
+            year,
+            month,
+            day
+        );
 
     const dateKey =
         getDateKey(date);
+
 
     const hasEvent =
         events.some(
@@ -467,13 +621,16 @@ for (
                 event.date === dateKey
         );
 
+
     const isSelected =
         getDateKey(selectedDate) ===
         dateKey;
 
+
     const classes = [
         "calendar-day"
     ];
+
 
     if (isToday(date)) {
         classes.push("today");
@@ -488,11 +645,12 @@ for (
     }
 
 
-    calendarHTML += `
+    html += `
         <button
             class="${classes.join(" ")}"
+            type="button"
+            data-action="select-date"
             data-date="${dateKey}"
-            aria-label="${day}"
         >
             ${day}
         </button>
@@ -502,7 +660,7 @@ for (
 
 
 daysContainer.innerHTML =
-    calendarHTML;
+    html;
 
 
 renderSelectedDayEvents();
@@ -512,43 +670,45 @@ renderSelectedDayEvents();
 function renderSelectedDayEvents() {
 
 const titleElement =
-    document.getElementById("selectedDayTitle");
+    document.getElementById(
+        "selectedDayTitle"
+    );
 
 const container =
     document.getElementById(
         "selectedDayEvents"
     );
 
-if (!titleElement || !container) {
+
+if (
+    !titleElement ||
+    !container
+) {
     return;
 }
+
 
 titleElement.textContent =
     formatDate(selectedDate);
 
 
-const selectedKey =
+const dateKey =
     getDateKey(selectedDate);
 
+
 const dayEvents =
-    events
-        .filter(
+    sortEvents(
+        events.filter(
             event =>
-                event.date === selectedKey
+                event.date === dateKey
         )
-        .sort(
-            (a, b) =>
-                (a.time || "99:99")
-                .localeCompare(
-                    b.time || "99:99"
-                )
-        );
+    );
 
 
 if (dayEvents.length === 0) {
 
     container.innerHTML =
-        createEmptyEventsMessage(
+        emptyState(
             "Pro tento den nic nemáme",
             "Můžete přidat novou událost."
         );
@@ -559,27 +719,33 @@ if (dayEvents.length === 0) {
 
 container.innerHTML =
     dayEvents
-        .map(createEventCard)
+        .map(
+            event =>
+                eventCard(event)
+        )
         .join("");
 
 }
 
-/* =========================================================
-7. ÚKOLY – RODINNÝ ZÁPISNÍK
-========================================================= */
+/* =========================================
+ÚKOLY
+========================================= */
 
-function createTaskNote(task) {
+function taskNote(task) {
 
-const completedClass =
+const completed =
     task.completed
         ? "completed"
         : "";
+
 
 const description =
     task.description
         ? `
             <div class="task-note-description">
-                ${escapeHTML(task.description)}
+                ${escapeHTML(
+                    task.description
+                )}
             </div>
         `
         : "";
@@ -587,20 +753,20 @@ const description =
 
 return `
     <article
-        class="task-note ${completedClass}"
-        data-task-id="${task.id}"
+        class="task-note ${completed}"
     >
 
         <button
             class="task-check"
-            data-task-id="${task.id}"
-            aria-label="Označit úkol jako hotový"
+            type="button"
+            data-action="toggle-task"
+            data-id="${escapeHTML(task.id)}"
+            aria-label="Odškrtnout úkol"
         >
-            <i class="fa-solid fa-check"></i>
+            ✓
         </button>
 
-
-        <div class="task-note-content">
+        <div>
 
             <div class="task-note-title">
                 ${escapeHTML(task.title)}
@@ -615,48 +781,48 @@ return `
 
 }
 
+function getSortedTasks() {
+
+return [...tasks].sort(
+    (a, b) =>
+        Number(a.completed) -
+        Number(b.completed)
+);
+
+}
+
 function renderTasks() {
 
-const allTasksContainer =
-    document.getElementById("allTasks");
+const allTasks =
+    document.getElementById(
+        "allTasks"
+    );
 
-const previewContainer =
-    document.getElementById("taskPreview");
-
-
-const sortedTasks =
-    [...tasks].sort(
-        (a, b) =>
-            Number(a.completed) -
-            Number(b.completed)
+const preview =
+    document.getElementById(
+        "taskPreview"
     );
 
 
-if (allTasksContainer) {
+const sortedTasks =
+    getSortedTasks();
+
+
+if (allTasks) {
 
     if (sortedTasks.length === 0) {
 
-        allTasksContainer.innerHTML = `
-            <div class="empty-state">
-                <div class="empty-icon">
-                    <i class="fa-solid fa-pen"></i>
-                </div>
-
-                <div>
-                    <h3>Zápisník je zatím prázdný</h3>
-                    <p>
-                        Přidejte první věc,
-                        kterou je potřeba udělat.
-                    </p>
-                </div>
-            </div>
-        `;
+        allTasks.innerHTML =
+            emptyState(
+                "Zápisník je zatím prázdný",
+                "Přidejte první věc, kterou je potřeba udělat."
+            );
 
     } else {
 
-        allTasksContainer.innerHTML =
+        allTasks.innerHTML =
             sortedTasks
-                .map(createTaskNote)
+                .map(taskNote)
                 .join("");
 
     }
@@ -664,38 +830,30 @@ if (allTasksContainer) {
 }
 
 
-if (previewContainer) {
+if (preview) {
 
-    const previewTasks =
+    const unfinished =
         sortedTasks
             .filter(
-                task => !task.completed
+                task =>
+                    !task.completed
             )
-            .slice(0, 3);
+            .slice(0, 4);
 
 
-    if (previewTasks.length === 0) {
+    if (unfinished.length === 0) {
 
-        previewContainer.innerHTML = `
-            <div class="empty-state">
-                <div class="empty-icon">
-                    <i class="fa-solid fa-check"></i>
-                </div>
-
-                <div>
-                    <h3>Vše je hotovo</h3>
-                    <p>
-                        Skvělá práce!
-                    </p>
-                </div>
-            </div>
-        `;
+        preview.innerHTML =
+            emptyState(
+                "Vše je hotovo",
+                "Skvělá práce!"
+            );
 
     } else {
 
-        previewContainer.innerHTML =
-            previewTasks
-                .map(createTaskNote)
+        preview.innerHTML =
+            unfinished
+                .map(taskNote)
                 .join("");
 
     }
@@ -704,18 +862,37 @@ if (previewContainer) {
 
 }
 
-/* =========================================================
-8. MODÁLNÍ OKNA
-========================================================= */
+/* =========================================
+MODÁLNÍ OKNO
+========================================= */
 
-const modal =
-document.getElementById("addModal");
+function getModalElements() {
+
+return {
+    modal:
+        document.getElementById("modal"),
+
+    content:
+        document.querySelector(
+            ".modal-content"
+        )
+};
+
+}
 
 function openModal() {
 
-if (!modal) return;
+const { modal } =
+    getModalElements();
 
-modal.classList.remove("hidden");
+if (!modal) {
+    return;
+}
+
+
+modal.classList.remove(
+    "hidden"
+);
 
 modal.setAttribute(
     "aria-hidden",
@@ -726,9 +903,17 @@ modal.setAttribute(
 
 function closeModal() {
 
-if (!modal) return;
+const { modal } =
+    getModalElements();
 
-modal.classList.add("hidden");
+if (!modal) {
+    return;
+}
+
+
+modal.classList.add(
+    "hidden"
+);
 
 modal.setAttribute(
     "aria-hidden",
@@ -737,58 +922,158 @@ modal.setAttribute(
 
 }
 
-/* =========================================================
-9. FORMULÁŘ PRO UDÁLOST
-========================================================= */
+function showAddMenu() {
 
-function showEventForm(eventToEdit = null) {
+const { content } =
+    getModalElements();
 
-const isEditing =
-    eventToEdit !== null;
-
-
-const selectedDateKey =
-    eventToEdit
-        ? eventToEdit.date
-        : getDateKey(selectedDate);
+if (!content) {
+    return;
+}
 
 
-const eventTime =
-    eventToEdit?.time || "";
-
-const eventDescription =
-    eventToEdit?.description || "";
-
-
-const modalContent =
-    document.querySelector(
-        ".modal-content"
-    );
-
-if (!modalContent) return;
-
-
-modalContent.innerHTML = `
+content.innerHTML = `
 
     <button
-        id="closeModal"
         class="close-modal"
+        type="button"
+        data-action="close-modal"
         aria-label="Zavřít"
     >
-        <i class="fa-solid fa-xmark"></i>
+        ×
     </button>
 
 
     <div class="modal-heading">
 
-        <span class="section-label">
-            ${isEditing
+        <span class="section-eyebrow">
+            NOVÝ ZÁZNAM
+        </span>
+
+        <h2>
+            Co přidáme?
+        </h2>
+
+        <p>
+            Vyberte, co chcete přidat do rodinného prostoru.
+        </p>
+
+    </div>
+
+
+    <div class="add-options">
+
+        <button
+            class="add-option"
+            type="button"
+            data-action="show-event-form"
+        >
+
+            <div class="add-option-icon">
+                ◫
+            </div>
+
+            <div class="add-option-text">
+
+                <h3>
+                    Nová událost
+                </h3>
+
+                <p>
+                    Naplánovat důležitý okamžik.
+                </p>
+
+            </div>
+
+            <strong>›</strong>
+
+        </button>
+
+
+        <button
+            class="add-option"
+            type="button"
+            data-action="show-task-form"
+        >
+
+            <div class="add-option-icon">
+                ✎
+            </div>
+
+            <div class="add-option-text">
+
+                <h3>
+                    Nový zápis
+                </h3>
+
+                <p>
+                    Přidat něco do rodinného zápisníku.
+                </p>
+
+            </div>
+
+            <strong>›</strong>
+
+        </button>
+
+    </div>
+`;
+
+}
+
+function openAddMenu() {
+
+openModal();
+showAddMenu();
+
+}
+
+/* =========================================
+FORMULÁŘ UDÁLOSTI
+========================================= */
+
+function showEventForm(eventToEdit = null) {
+
+const { content } =
+    getModalElements();
+
+if (!content) {
+    return;
+}
+
+
+const editing =
+    eventToEdit !== null;
+
+
+const date =
+    editing
+        ? eventToEdit.date
+        : getDateKey(selectedDate);
+
+
+content.innerHTML = `
+
+    <button
+        class="close-modal"
+        type="button"
+        data-action="close-modal"
+        aria-label="Zavřít"
+    >
+        ×
+    </button>
+
+
+    <div class="modal-heading">
+
+        <span class="section-eyebrow">
+            ${editing
                 ? "ÚPRAVA UDÁLOSTI"
                 : "NOVÁ UDÁLOST"}
         </span>
 
         <h2>
-            ${isEditing
+            ${editing
                 ? "Upravit událost"
                 : "Naplánovat společný čas"}
         </h2>
@@ -796,24 +1081,21 @@ modalContent.innerHTML = `
     </div>
 
 
-    <form
-        id="eventForm"
-        class="app-form"
-    >
+    <form id="eventForm" class="app-form">
 
         <label>
 
             Název události
 
             <input
-                type="text"
                 id="eventTitle"
-                value="${isEditing
+                type="text"
+                required
+                maxlength="100"
+                value="${editing
                     ? escapeHTML(eventToEdit.title)
                     : ""}"
                 placeholder="Například návštěva lékaře"
-                required
-                maxlength="80"
             >
 
         </label>
@@ -824,10 +1106,10 @@ modalContent.innerHTML = `
             Datum
 
             <input
-                type="date"
                 id="eventDate"
-                value="${selectedDateKey}"
+                type="date"
                 required
+                value="${escapeHTML(date)}"
             >
 
         </label>
@@ -836,10 +1118,15 @@ modalContent.innerHTML = `
         <label>
 
             Čas
+
             <input
-                type="time"
                 id="eventTime"
-                value="${eventTime}"
+                type="time"
+                value="${editing
+                    ? escapeHTML(
+                        eventToEdit.time || ""
+                    )
+                    : ""}"
             >
 
         </label>
@@ -851,42 +1138,46 @@ modalContent.innerHTML = `
 
             <textarea
                 id="eventDescription"
+                maxlength="400"
                 placeholder="Volitelná poznámka..."
-                maxlength="300"
-            >${escapeHTML(eventDescription)}</textarea>
+            >${editing
+                ? escapeHTML(
+                    eventToEdit.description || ""
+                )
+                : ""}</textarea>
 
         </label>
 
 
         <button
-            type="submit"
             class="form-submit"
+            type="submit"
         >
-
-            <i class="fa-solid fa-check"></i>
-
-            ${isEditing
+            ${editing
                 ? "Uložit změny"
                 : "Přidat událost"}
-
         </button>
 
     </form>
-
 `;
 
 
-attachModalCloseListener();
-
-
 const form =
-    document.getElementById("eventForm");
+    document.getElementById(
+        "eventForm"
+    );
 
-form?.addEventListener(
+
+if (!form) {
+    return;
+}
+
+
+form.addEventListener(
     "submit",
-    event => {
+    formEvent => {
 
-        event.preventDefault();
+        formEvent.preventDefault();
 
 
         const title =
@@ -895,7 +1186,7 @@ form?.addEventListener(
                 .value
                 .trim();
 
-        const date =
+        const eventDate =
             document
                 .getElementById("eventDate")
                 .value;
@@ -907,31 +1198,37 @@ form?.addEventListener(
 
         const description =
             document
-                .getElementById("eventDescription")
+                .getElementById(
+                    "eventDescription"
+                )
                 .value
                 .trim();
 
 
-        if (!title || !date) {
+        if (
+            !title ||
+            !eventDate
+        ) {
             return;
         }
 
 
-        if (isEditing) {
+        if (editing) {
 
             const index =
                 events.findIndex(
-                    item =>
-                        item.id ===
+                    event =>
+                        event.id ===
                         eventToEdit.id
                 );
+
 
             if (index !== -1) {
 
                 events[index] = {
                     ...events[index],
                     title,
-                    date,
+                    date: eventDate,
                     time,
                     description
                 };
@@ -943,34 +1240,29 @@ form?.addEventListener(
             events.push({
                 id: createId(),
                 title,
-                date,
+                date: eventDate,
                 time,
                 description,
                 createdAt:
-                    new Date()
-                        .toISOString()
+                    new Date().toISOString()
             });
 
         }
 
 
         selectedDate =
-            new Date(
-                `${date}T00:00:00`
-            );
+            dateFromKey(eventDate);
 
         currentCalendarDate =
             new Date(
-                selectedDate
-                    .getFullYear(),
-                selectedDate
-                    .getMonth(),
+                selectedDate.getFullYear(),
+                selectedDate.getMonth(),
                 1
             );
 
 
         saveData();
-        renderEverything();
+        renderAll();
         closeModal();
 
     }
@@ -978,34 +1270,35 @@ form?.addEventListener(
 
 }
 
-/* =========================================================
-10. FORMULÁŘ PRO ÚKOL
-========================================================= */
+/* =========================================
+FORMULÁŘ ÚKOLU
+========================================= */
 
 function showTaskForm() {
 
-const modalContent =
-    document.querySelector(
-        ".modal-content"
-    );
+const { content } =
+    getModalElements();
 
-if (!modalContent) return;
+if (!content) {
+    return;
+}
 
 
-modalContent.innerHTML = `
+content.innerHTML = `
 
     <button
-        id="closeModal"
         class="close-modal"
+        type="button"
+        data-action="close-modal"
         aria-label="Zavřít"
     >
-        <i class="fa-solid fa-xmark"></i>
+        ×
     </button>
 
 
     <div class="modal-heading">
 
-        <span class="section-label">
+        <span class="section-eyebrow">
             NOVÝ ZÁPIS
         </span>
 
@@ -1014,29 +1307,24 @@ modalContent.innerHTML = `
         </h2>
 
         <p>
-            Přidejte jednoduchý zápis
-            do rodinného zápisníku.
+            Jednoduše napište poznámku do rodinného zápisníku.
         </p>
 
     </div>
 
 
-    <form
-        id="taskForm"
-        class="app-form"
-    >
+    <form id="taskForm" class="app-form">
 
         <label>
 
             Úkol
 
             <input
-                type="text"
                 id="taskTitle"
-                placeholder="Například koupit pečivo"
+                type="text"
                 required
-                maxlength="100"
-                autofocus
+                maxlength="120"
+                placeholder="Například koupit pečivo"
             >
 
         </label>
@@ -1048,40 +1336,40 @@ modalContent.innerHTML = `
 
             <textarea
                 id="taskDescription"
+                maxlength="300"
                 placeholder="Volitelná poznámka..."
-                maxlength="250"
             ></textarea>
 
         </label>
 
 
         <button
-            type="submit"
             class="form-submit"
+            type="submit"
         >
-
-            <i class="fa-solid fa-plus"></i>
-
             Přidat do zápisníku
-
         </button>
 
     </form>
-
 `;
 
 
-attachModalCloseListener();
-
-
 const form =
-    document.getElementById("taskForm");
+    document.getElementById(
+        "taskForm"
+    );
 
-form?.addEventListener(
+
+if (!form) {
+    return;
+}
+
+
+form.addEventListener(
     "submit",
-    event => {
+    formEvent => {
 
-        event.preventDefault();
+        formEvent.preventDefault();
 
 
         const title =
@@ -1096,20 +1384,598 @@ form?.addEventListener(
                     "taskDescription"
                 )
                 .value
-                .trim(
-/* Pojistka – úvodní logo se vždy po načtení skryje */
-window.addEventListener("load", () => {
-    setTimeout(() => {
-        const loadingScreen = document.getElementById("loadingScreen");
+                .trim();
 
-        if (loadingScreen) {
-            loadingScreen.style.opacity = "0";
-            loadingScreen.style.visibility = "hidden";
-            loadingScreen.style.pointerEvents = "none";
 
-            setTimeout(() => {
-                loadingScreen.style.display = "none";
-            }, 800);
+        if (!title) {
+            return;
         }
-    }, 2000);
+
+
+        tasks.push({
+            id: createId(),
+            title,
+            description,
+            completed: false,
+            createdAt:
+                new Date().toISOString()
+        });
+
+
+        saveData();
+        renderTasks();
+        closeModal();
+
+    }
+);
+
+}
+
+/* =========================================
+EDITACE A MAZÁNÍ
+========================================= */
+
+function editEvent(eventId) {
+
+const event =
+    events.find(
+        item =>
+            item.id === eventId
+    );
+
+
+if (!event) {
+    return;
+}
+
+
+openModal();
+showEventForm(event);
+
+}
+
+function deleteEvent(eventId) {
+
+const event =
+    events.find(
+        item =>
+            item.id === eventId
+    );
+
+
+if (!event) {
+    return;
+}
+
+
+const confirmed =
+    window.confirm(
+        `Opravdu chcete smazat událost „${event.title}“?`
+    );
+
+
+if (!confirmed) {
+    return;
+}
+
+
+events =
+    events.filter(
+        item =>
+            item.id !== eventId
+    );
+
+
+saveData();
+renderAll();
+
+}
+
+function toggleTask(taskId) {
+
+const task =
+    tasks.find(
+        item =>
+            item.id === taskId
+    );
+
+
+if (!task) {
+    return;
+}
+
+
+task.completed =
+    !task.completed;
+
+
+saveData();
+renderTasks();
+
+}
+
+/* =========================================
+NAVIGACE
+========================================= */
+
+function showSection(sectionId) {
+
+const sections =
+    document.querySelectorAll(
+        ".content-section"
+    );
+
+const buttons =
+    document.querySelectorAll(
+        ".nav-button[data-section]"
+    );
+
+
+sections.forEach(
+    section => {
+
+        section.classList.toggle(
+            "active",
+            section.id === sectionId
+        );
+
+    }
+);
+
+
+buttons.forEach(
+    button => {
+
+        button.classList.toggle(
+            "active",
+            button.dataset.section ===
+                sectionId
+        );
+
+    }
+);
+
+
+window.scrollTo({
+    top: 0,
+    behavior: "smooth"
 });
+
+}
+
+/* =========================================
+NOTIFIKACE – PŘÍPRAVA
+========================================= */
+
+function requestNotificationPermission() {
+
+if (
+    !("Notification" in window)
+) {
+
+    window.alert(
+        "Tento prohlížeč nepodporuje systémové notifikace."
+    );
+
+    return;
+}
+
+
+if (
+    Notification.permission ===
+    "granted"
+) {
+
+    window.alert(
+        "Notifikace jsou v tomto prohlížeči povolené."
+    );
+
+    return;
+}
+
+
+if (
+    Notification.permission ===
+    "denied"
+) {
+
+    window.alert(
+        "Notifikace jsou v prohlížeči zakázané. Můžete je povolit v nastavení prohlížeče."
+    );
+
+    return;
+}
+
+
+Notification.requestPermission();
+
+}
+
+/* =========================================
+CENTRÁLNÍ OVLÁDÁNÍ KLIKNUTÍ
+========================================= */
+
+function setupClickEvents() {
+
+document.addEventListener(
+    "click",
+    event => {
+
+        const actionElement =
+            event.target.closest(
+                "[data-action]"
+            );
+
+
+        if (actionElement) {
+
+            const action =
+                actionElement.dataset.action;
+
+            const id =
+                actionElement.dataset.id;
+
+
+            if (
+                action ===
+                "close-modal"
+            ) {
+                closeModal();
+                return;
+            }
+
+
+            if (
+                action ===
+                "show-event-form"
+            ) {
+                showEventForm();
+                return;
+            }
+
+
+            if (
+                action ===
+                "show-task-form"
+            ) {
+                showTaskForm();
+                return;
+            }
+
+
+            if (
+                action ===
+                "edit-event"
+            ) {
+                editEvent(id);
+                return;
+            }
+
+
+            if (
+                action ===
+                "delete-event"
+            ) {
+                deleteEvent(id);
+                return;
+            }
+
+
+            if (
+                action ===
+                "toggle-task"
+            ) {
+                toggleTask(id);
+                return;
+            }
+
+
+            if (
+                action ===
+                "select-date"
+            ) {
+
+                selectedDate =
+                    dateFromKey(
+                        actionElement.dataset.date
+                    );
+
+                renderCalendar();
+
+                return;
+
+            }
+
+        }
+
+
+        const navButton =
+            event.target.closest(
+                ".nav-button[data-section]"
+            );
+
+
+        if (navButton) {
+
+            showSection(
+                navButton.dataset.section
+            );
+
+        }
+
+    }
+);
+
+}
+
+/* =========================================
+PŘÍMÁ TLAČÍTKA
+========================================= */
+
+function setupButtons() {
+
+const addButtons = [
+    "addEventHomeButton",
+    "addEventCalendarButton"
+];
+
+
+addButtons.forEach(
+    id => {
+
+        const button =
+            document.getElementById(id);
+
+        if (button) {
+
+            button.addEventListener(
+                "click",
+                () => {
+
+                    openModal();
+                    showEventForm();
+
+                }
+            );
+
+        }
+
+    }
+);
+
+
+const taskButtons = [
+    "addTaskHomeButton",
+    "addTaskButton"
+];
+
+
+taskButtons.forEach(
+    id => {
+
+        const button =
+            document.getElementById(id);
+
+        if (button) {
+
+            button.addEventListener(
+                "click",
+                () => {
+
+                    openModal();
+                    showTaskForm();
+
+                }
+            );
+
+        }
+
+    }
+);
+
+
+const floatingButton =
+    document.getElementById(
+        "floatingAddButton"
+    );
+
+
+if (floatingButton) {
+
+    floatingButton.addEventListener(
+        "click",
+        openAddMenu
+    );
+
+}
+
+
+const previousButton =
+    document.getElementById(
+        "previousMonth"
+    );
+
+
+if (previousButton) {
+
+    previousButton.addEventListener(
+        "click",
+        () => {
+
+            currentCalendarDate =
+                new Date(
+                    currentCalendarDate.getFullYear(),
+                    currentCalendarDate.getMonth() - 1,
+                    1
+                );
+
+            renderCalendar();
+
+        }
+    );
+
+}
+
+
+const nextButton =
+    document.getElementById(
+        "nextMonth"
+    );
+
+
+if (nextButton) {
+
+    nextButton.addEventListener(
+        "click",
+        () => {
+
+            currentCalendarDate =
+                new Date(
+                    currentCalendarDate.getFullYear(),
+                    currentCalendarDate.getMonth() + 1,
+                    1
+                );
+
+            renderCalendar();
+
+        }
+    );
+
+}
+
+
+const notificationButtons = [
+    "notificationButton",
+    "notificationNavButton"
+];
+
+
+notificationButtons.forEach(
+    id => {
+
+        const button =
+            document.getElementById(id);
+
+        if (button) {
+
+            button.addEventListener(
+                "click",
+                requestNotificationPermission
+            );
+
+        }
+
+    }
+);
+
+
+const backdrop =
+    document.getElementById(
+        "modalBackdrop"
+    );
+
+
+if (backdrop) {
+
+    backdrop.addEventListener(
+        "click",
+        closeModal
+    );
+
+}
+
+}
+
+/* =========================================
+VYKRESLENÍ CELÉ APLIKACE
+========================================= */
+
+function renderAll() {
+
+renderHeader();
+renderTodayEvents();
+renderUpcomingEvents();
+renderCalendar();
+renderTasks();
+
+}
+
+/* =========================================
+SPUŠTĚNÍ
+========================================= */
+
+function startApplication() {
+
+try {
+
+    loadData();
+
+    renderAll();
+
+    setupClickEvents();
+
+    setupButtons();
+
+} catch (error) {
+
+    console.error(
+        "Došlo k chybě při spuštění aplikace:",
+        error
+    );
+
+} finally {
+
+    /*
+     * Úvodní obrazovka se skryje vždy,
+     * i pokud by došlo k neočekávané chybě.
+     */
+
+    hideLoadingScreen();
+
+}
+
+}
+
+/* Spuštění po načtení HTML */
+
+if (
+document.readyState ===
+"loading"
+) {
+
+document.addEventListener(
+    "DOMContentLoaded",
+    startApplication
+);
+
+} else {
+
+startApplication();
+
+}
+
+/*
+
+* Poslední nezávislá pojistka.
+* Logo zmizí i v případě neočekávaného problému.
+  */
+
+window.setTimeout(() => {
+
+const loadingScreen =
+    document.getElementById(
+        "loadingScreen"
+    );
+
+if (loadingScreen) {
+
+    loadingScreen.classList.add(
+        "hide"
+    );
+
+    loadingScreen.style.pointerEvents =
+        "none";
+
+}
+
+}, 5000);
