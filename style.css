@@ -1815,3 +1815,265 @@ body {
 }
 
 }
+/* =========================================================
+DYNAMICKÉ KARTY A FORMULÁŘE
+========================================================= */
+
+.event-card {
+display: flex;
+align-items: center;
+
+gap: 14px;
+
+margin-bottom: 10px;
+padding: 15px;
+
+border-radius: 18px;
+
+background:
+    linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.065),
+        rgba(255, 255, 255, 0.025)
+    );
+
+border: 1px solid var(--border-light);
+
+backdrop-filter: blur(12px);
+
+}
+
+.event-time {
+min-width: 58px;
+
+padding: 8px 7px;
+
+border-radius: 12px;
+
+color: var(--gold);
+
+background:
+    rgba(228, 199, 123, 0.08);
+
+font-size: 0.72rem;
+font-weight: 700;
+
+text-align: center;
+
+}
+
+.event-info {
+flex: 1;
+min-width: 0;
+}
+
+.event-info h3 {
+margin: 0 0 4px;
+
+font-size: 0.95rem;
+font-weight: 600;
+
+}
+
+.event-info p {
+margin: 0;
+
+color: var(--text-soft);
+
+font-size: 0.78rem;
+line-height: 1.45;
+
+}
+
+/* ÚKOLY */
+
+.task-card {
+display: flex;
+align-items: center;
+
+gap: 12px;
+
+margin-bottom: 10px;
+padding: 14px;
+
+border-radius: 18px;
+
+background:
+    rgba(255, 255, 255, 0.045);
+
+border: 1px solid var(--border-light);
+
+transition:
+    opacity 0.25s ease,
+    transform 0.25s ease;
+
+}
+
+.task-card.completed {
+opacity: 0.5;
+}
+
+.task-card.completed h3 {
+text-decoration: line-through;
+}
+
+.task-check {
+width: 32px;
+height: 32px;
+
+flex-shrink: 0;
+
+display: grid;
+place-items: center;
+
+border-radius: 11px;
+
+color: transparent;
+
+background:
+    rgba(255, 255, 255, 0.04);
+
+border:
+    1px solid rgba(255, 255, 255, 0.12);
+
+}
+
+.task-card.completed .task-check {
+color: #082019;
+
+background: var(--accent);
+
+border-color: var(--accent);
+
+}
+
+.task-info {
+flex: 1;
+min-width: 0;
+}
+
+.task-info h3 {
+margin: 0 0 3px;
+
+font-size: 0.9rem;
+
+}
+
+.task-info p {
+margin: 0;
+
+color: var(--text-soft);
+
+font-size: 0.75rem;
+
+}
+
+.task-status {
+flex-shrink: 0;
+
+padding: 5px 8px;
+
+border-radius: 100px;
+
+color: var(--accent);
+
+background:
+    rgba(131, 214, 190, 0.08);
+
+font-size: 0.6rem;
+font-weight: 700;
+
+}
+
+/* FORMULÁŘE */
+
+.app-form {
+display: grid;
+gap: 16px;
+}
+
+.app-form label {
+display: grid;
+gap: 7px;
+
+color: var(--text-soft);
+
+font-size: 0.75rem;
+font-weight: 600;
+
+}
+
+.app-form input,
+.app-form textarea,
+.app-form select {
+width: 100%;
+
+padding: 13px 14px;
+
+color: var(--text);
+
+outline: none;
+
+border-radius: 14px;
+
+background:
+    rgba(255, 255, 255, 0.055);
+
+border:
+    1px solid rgba(255, 255, 255, 0.1);
+
+font-family: inherit;
+
+transition:
+    border 0.2s ease,
+    background 0.2s ease;
+
+}
+
+.app-form textarea {
+resize: vertical;
+}
+
+.app-form select {
+color-scheme: dark;
+}
+
+.app-form input:focus,
+.app-form textarea:focus,
+.app-form select:focus {
+border-color:
+rgba(131, 214, 190, 0.55);
+
+background:
+    rgba(131, 214, 190, 0.06);
+
+}
+
+.form-submit {
+width: 100%;
+
+margin-top: 5px;
+padding: 15px;
+
+border-radius: 16px;
+
+color: #062019;
+
+background:
+    linear-gradient(
+        135deg,
+        var(--accent-bright),
+        var(--accent)
+    );
+
+font-weight: 800;
+
+box-shadow:
+    0 10px 30px
+    rgba(83, 207, 172, 0.16);
+
+}
+
+.form-submit i {
+margin-right: 6px;
+}
