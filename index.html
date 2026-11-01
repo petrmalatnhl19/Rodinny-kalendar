@@ -1,436 +1,379 @@
 <!DOCTYPE html><html lang="cs">
 <head>
-    <meta charset="UTF-8"><!-- Správné zobrazení na mobilu -->
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8"><meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
 
-<meta name="theme-color" content="#080d14">
+<meta
+    name="theme-color"
+    content="#071412"
+>
 
 <title>Malátovi | Naše domácnost</title>
 
-<!-- Font Awesome – ikony -->
+<!-- Google Font -->
+<link
+    rel="preconnect"
+    href="https://fonts.googleapis.com"
+>
+
+<link
+    rel="preconnect"
+    href="https://fonts.gstatic.com"
+    crossorigin
+>
+
+<link
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap"
+    rel="stylesheet"
+>
+
+<!-- Font Awesome -->
 <link
     rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
 >
 
-<!-- Vzhled aplikace -->
-<link rel="stylesheet" href="style.css">
+<link
+    rel="stylesheet"
+    href="style.css"
+>
 
-</head><body><!-- =====================================================
-     ÚVODNÍ NAČÍTACÍ OBRAZOVKA
-====================================================== -->
+</head><body><!-- =============================================
+     ÚVODNÍ OBRAZOVKA
+============================================== -->
 
-<div id="loadingScreen" class="loading-screen">
+<div
+    id="loadingScreen"
+    class="loading-screen"
+>
 
-    <div class="loading-orbit orbit-one"></div>
-    <div class="loading-orbit orbit-two"></div>
+    <div class="loading-glow"></div>
 
     <div class="loading-content">
 
-        <div class="loading-symbol">
-            <i class="fa-solid fa-house"></i>
+        <div class="loading-line"></div>
+
+        <div class="loading-family">
+            MALÁTOVI
         </div>
 
-        <p class="loading-label">RODINNÝ PROSTOR</p>
-
-        <h1 class="loading-title">
-            <span>MALÁTOVI</span>
-        </h1>
-
-        <p class="loading-subtitle">
-            NÁŠ MALÝ VESMÍR
-        </p>
-
-        <div class="loading-progress">
-            <span></span>
+        <div class="loading-subtitle">
+            NÁŠ SPOLEČNÝ PROSTOR
         </div>
+
+        <div class="loading-line"></div>
 
     </div>
 
 </div>
 
 
-<!-- =====================================================
-     POZADÍ APLIKACE
-====================================================== -->
+<!-- =============================================
+     POZADÍ S RODINNOU FOTOGRAFIÍ
+============================================== -->
 
-<div class="app-background">
+<div class="family-background"></div>
 
-    <div class="background-image"></div>
-    <div class="background-darken"></div>
-
-    <!-- Jemné futuristické světelné efekty -->
-    <div class="ambient-light ambient-one"></div>
-    <div class="ambient-light ambient-two"></div>
-
-    <div class="background-grid"></div>
-
-</div>
+<div class="background-overlay"></div>
 
 
-<!-- =====================================================
+<!-- =============================================
      HLAVNÍ APLIKACE
-====================================================== -->
+============================================== -->
 
-<div class="app-shell">
+<main class="app-shell">
 
 
-    <!-- =================================================
+    <!-- =========================================
          HLAVIČKA
-    ================================================== -->
+    ========================================== -->
 
     <header class="app-header">
 
-        <div class="brand">
+        <div class="header-top">
 
-            <div class="brand-icon">
-                <i class="fa-solid fa-house"></i>
+            <div class="brand">
+
+                <span class="brand-small">
+                    NAŠE DOMÁCNOST
+                </span>
+
+                <h1>
+                    MALÁTOVI
+                </h1>
+
             </div>
 
-            <div class="brand-text">
-                <span class="brand-label">RODINNÝ PROSTOR</span>
-                <h1>Naše domácnost</h1>
-            </div>
+
+            <button
+                id="notificationButton"
+                class="header-icon-button"
+                aria-label="Notifikace"
+            >
+
+                <i class="fa-regular fa-bell"></i>
+
+                <span class="notification-dot"></span>
+
+            </button>
 
         </div>
 
 
-        <!-- Notifikace -->
+        <!-- Rodinný citát -->
 
-        <button
-            id="notificationButton"
-            class="notification-button"
-            aria-label="Otevřít notifikace"
-        >
-            <i class="fa-regular fa-bell"></i>
+        <div class="family-quote-wrap">
 
-            <span
-                id="notificationBadge"
-                class="notification-badge hidden"
-            >
-                0
-            </span>
-        </button>
+            <i
+                class="fa-solid fa-quote-left quote-icon"
+            ></i>
+
+            <p id="familyQuote">
+                „Domov není místo. Domov jsou lidé,
+                které máme rádi.“
+            </p>
+
+        </div>
 
     </header>
 
 
-    <!-- =================================================
-         HLAVNÍ OBSAH
-    ================================================== -->
+    <!-- =========================================
+         DOMOVSKÁ STRÁNKA
+    ========================================== -->
 
-    <main class="main-content">
+    <section
+        id="home"
+        class="content-section active"
+    >
 
+        <!-- Dnešní datum -->
 
-        <!-- =============================================
-             DOMOVSKÁ OBRAZOVKA
-        ============================================== -->
+        <div class="welcome-card">
 
-        <section
-            id="home"
-            class="content-section active"
-        >
+            <span class="section-label">
+                DNES JE
+            </span>
 
-            <!-- Rodinná fotografie / Hero -->
+            <h2 id="currentDate">
+                Načítání...
+            </h2>
 
-            <div class="family-hero">
+            <p id="todayMessage">
+                Podívejme se, co nás dnes čeká.
+            </p>
 
-                <div class="family-hero-image"></div>
-                <div class="family-hero-overlay"></div>
-
-                <div class="family-hero-content">
-
-                    <div class="family-status">
-                        <span class="status-dot"></span>
-                        <span>RODINA MALÁTOVÝCH</span>
-                    </div>
-
-                    <div class="quote-block">
-
-                        <i class="fa-solid fa-quote-left"></i>
-
-                        <p id="familyQuote">
-                            „Domov není místo. Domov jsou lidé, které máme rádi.“
-                        </p>
-
-                    </div>
-
-                </div>
-
-            </div>
+        </div>
 
 
-            <!-- Datum -->
+        <!-- Dnešní události -->
 
-            <div class="today-intro">
+        <div class="section-heading">
 
-                <div>
+            <div>
 
-                    <span class="section-label">
-                        DNES
-                    </span>
+                <span class="section-label">
+                    DNEŠNÍ PLÁN
+                </span>
 
-                    <h2 id="currentDate">
-                        Načítání data...
-                    </h2>
-
-                    <p id="todayMessage">
-                        Podívejme se, co nás dnes čeká.
-                    </p>
-
-                </div>
-
-
-                <div class="today-symbol">
-
-                    <i class="fa-solid fa-sun"></i>
-
-                </div>
+                <h2>
+                    Co nás čeká
+                </h2>
 
             </div>
 
+            <button
+                class="section-add-button"
+                data-action="add-event"
+                aria-label="Přidat událost"
+            >
+                <i class="fa-solid fa-plus"></i>
+            </button>
 
-            <!-- Dnešní plán -->
+        </div>
+
+
+        <div
+            id="todayEvents"
+            class="events-list"
+        ></div>
+
+
+        <!-- Nadcházející události -->
+
+        <div class="section-heading compact-heading">
+
+            <div>
+
+                <span class="section-label">
+                    V NEJBLIŽŠÍ DOBĚ
+                </span>
+
+                <h2>
+                    Nadcházející
+                </h2>
+
+            </div>
+
+            <button
+                class="text-link-button"
+                data-section-target="calendar"
+            >
+                Kalendář
+                <i class="fa-solid fa-arrow-right"></i>
+            </button>
+
+        </div>
+
+
+        <div
+            id="upcomingEvents"
+            class="events-list"
+        ></div>
+
+
+        <!-- Rychlý seznam úkolů -->
+
+        <div class="section-heading compact-heading">
+
+            <div>
+
+                <span class="section-label">
+                    RODINNÝ ZÁPISNÍK
+                </span>
+
+                <h2>
+                    Co je potřeba
+                </h2>
+
+            </div>
+
+            <button
+                class="text-link-button"
+                data-section-target="tasks"
+            >
+                Všechny
+                <i class="fa-solid fa-arrow-right"></i>
+            </button>
+
+        </div>
+
+
+        <div
+            id="taskPreview"
+            class="notebook-preview"
+        ></div>
+
+
+        <!-- Rodinný detail -->
+
+        <div class="family-footer-card">
+
+            <div class="family-footer-icon">
+                <i class="fa-solid fa-heart"></i>
+            </div>
+
+            <div>
+
+                <h3>
+                    Náš společný domov
+                </h3>
+
+                <p>
+                    Malé věci, společné plány
+                    a vzpomínky, které tvoří náš život.
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================================
+         KALENDÁŘ
+    ========================================== -->
+
+    <section
+        id="calendar"
+        class="content-section"
+    >
+
+        <div class="page-heading">
+
+            <span class="section-label">
+                RODINNÝ KALENDÁŘ
+            </span>
+
+            <h2>
+                Naše plány
+            </h2>
+
+            <p>
+                Vše důležité přehledně na jednom místě.
+            </p>
+
+        </div>
+
+
+        <!-- Navigace kalendáře -->
+
+        <div class="calendar-navigation">
+
+            <button
+                id="previousMonth"
+                class="calendar-nav-button"
+                aria-label="Předchozí měsíc"
+            >
+                <i class="fa-solid fa-chevron-left"></i>
+            </button>
+
+            <h3 id="calendarMonth">
+                Načítání...
+            </h3>
+
+            <button
+                id="nextMonth"
+                class="calendar-nav-button"
+                aria-label="Další měsíc"
+            >
+                <i class="fa-solid fa-chevron-right"></i>
+            </button>
+
+        </div>
+
+
+        <!-- Dny v týdnu -->
+
+        <div class="calendar-weekdays">
+
+            <span>Po</span>
+            <span>Út</span>
+            <span>St</span>
+            <span>Čt</span>
+            <span>Pá</span>
+            <span>So</span>
+            <span>Ne</span>
+
+        </div>
+
+
+        <!-- Dny kalendáře -->
+
+        <div
+            id="calendarDays"
+            class="calendar-days"
+        ></div>
+
+
+        <!-- Události vybraného dne -->
+
+        <div class="selected-day-section">
 
             <div class="section-heading">
-
-                <div>
-
-                    <span class="section-label">
-                        DENNÍ PLÁN
-                    </span>
-
-                    <h2>Dnes nás čeká</h2>
-
-                </div>
-
-
-                <button
-                    class="text-action"
-                    data-action="add-event"
-                >
-                    <i class="fa-solid fa-plus"></i>
-                    Přidat
-                </button>
-
-            </div>
-
-
-            <!-- Sem JavaScript vloží události -->
-
-            <div
-                id="todayEvents"
-                class="events-timeline"
-            >
-
-                <div class="timeline-empty">
-
-                    <div class="empty-icon">
-                        <i class="fa-regular fa-calendar"></i>
-                    </div>
-
-                    <div>
-
-                        <h3>Zatím nic naplánováno</h3>
-
-                        <p>
-                            Užijte si společný čas.
-                        </p>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <!-- Nejbližší dny -->
-
-            <div class="section-heading">
-
-                <div>
-
-                    <span class="section-label">
-                        VÝHLED
-                    </span>
-
-                    <h2>Co nás čeká</h2>
-
-                </div>
-
-
-                <button
-                    class="icon-action"
-                    data-section-target="calendar"
-                    aria-label="Otevřít kalendář"
-                >
-                    <i class="fa-solid fa-arrow-right"></i>
-                </button>
-
-            </div>
-
-
-            <div
-                id="upcomingEvents"
-                class="upcoming-events"
-            >
-
-                <div class="upcoming-empty">
-
-                    <i class="fa-solid fa-sparkles"></i>
-
-                    <span>
-                        Budoucnost je zatím volná.
-                    </span>
-
-                </div>
-
-            </div>
-
-
-            <!-- Úkoly -->
-
-            <div class="section-heading">
-
-                <div>
-
-                    <span class="section-label">
-                        SPOLEČNĚ
-                    </span>
-
-                    <h2>Co je potřeba udělat</h2>
-
-                </div>
-
-
-                <button
-                    class="icon-action"
-                    data-section-target="tasks"
-                    aria-label="Otevřít úkoly"
-                >
-                    <i class="fa-solid fa-arrow-right"></i>
-                </button>
-
-            </div>
-
-
-            <!-- Sem JavaScript vloží úkoly -->
-
-            <div
-                id="taskPreview"
-                class="task-preview"
-            >
-
-                <div class="tasks-empty">
-
-                    <i class="fa-solid fa-check-double"></i>
-
-                    <p>
-                        Žádné úkoly. Můžete si užít klid. ❤️
-                    </p>
-
-                </div>
-
-            </div>
-
-
-            <!-- Rodinný podpis -->
-
-            <div class="family-signature">
-
-                <span class="signature-line"></span>
-
-                <div>
-
-                    <i class="fa-solid fa-heart"></i>
-
-                    <span>
-                        MALÁTOVI · SPOLEČNĚ
-                    </span>
-
-                </div>
-
-                <span class="signature-line"></span>
-
-            </div>
-
-        </section>
-
-
-        <!-- =============================================
-             KALENDÁŘ
-        ============================================== -->
-
-        <section
-            id="calendar"
-            class="content-section"
-        >
-
-            <div class="calendar-header">
-
-                <div>
-
-                    <span class="section-label">
-                        RODINNÝ KALENDÁŘ
-                    </span>
-
-                    <h2 id="calendarMonth">
-                        Načítání...
-                    </h2>
-
-                </div>
-
-
-                <div class="calendar-controls">
-
-                    <button
-                        id="previousMonth"
-                        aria-label="Předchozí měsíc"
-                    >
-                        <i class="fa-solid fa-chevron-left"></i>
-                    </button>
-
-
-                    <button
-                        id="nextMonth"
-                        aria-label="Další měsíc"
-                    >
-                        <i class="fa-solid fa-chevron-right"></i>
-                    </button>
-
-                </div>
-
-            </div>
-
-
-            <div class="calendar-card">
-
-                <div class="calendar-weekdays">
-
-                    <span>Po</span>
-                    <span>Út</span>
-                    <span>St</span>
-                    <span>Čt</span>
-                    <span>Pá</span>
-                    <span>So</span>
-                    <span>Ne</span>
-
-                </div>
-
-
-                <!-- Kalendář vytvoří app.js -->
-
-                <div
-                    id="calendarDays"
-                    class="calendar-days"
-                ></div>
-
-            </div>
-
-
-            <!-- Události vybraného dne -->
-
-            <div class="section-heading selected-day-heading">
 
                 <div>
 
@@ -439,18 +382,18 @@
                     </span>
 
                     <h2 id="selectedDayTitle">
-                        Vyberte den
+                        Načítání...
                     </h2>
 
                 </div>
 
 
                 <button
-                    class="text-action"
+                    class="section-add-button"
                     data-action="add-event"
+                    aria-label="Přidat událost"
                 >
                     <i class="fa-solid fa-plus"></i>
-                    Akce
                 </button>
 
             </div>
@@ -458,224 +401,84 @@
 
             <div
                 id="selectedDayEvents"
-                class="selected-day-events"
-            >
+                class="events-list"
+            ></div>
 
-                <div class="empty-state">
+        </div>
 
-                    <div class="empty-icon">
-                        <i class="fa-regular fa-calendar"></i>
-                    </div>
+    </section>
 
-                    <p>
-                        Vyberte den v kalendáři.
-                    </p>
+
+    <!-- =========================================
+         ÚKOLY – RODINNÝ ZÁPISNÍK
+    ========================================== -->
+
+    <section
+        id="tasks"
+        class="content-section"
+    >
+
+        <div class="page-heading">
+
+            <span class="section-label">
+                RODINNÝ ZÁPISNÍK
+            </span>
+
+            <h2>
+                Co je potřeba udělat
+            </h2>
+
+            <p>
+                Jednoduchý společný seznam.
+                Hotové věci si jednoduše odškrtněte.
+            </p>
+
+        </div>
+
+
+        <div class="notebook">
+
+            <div class="notebook-top">
+
+                <div class="notebook-rings">
+
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
 
                 </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- =============================================
-             ÚKOLY
-        ============================================== -->
-
-        <section
-            id="tasks"
-            class="content-section"
-        >
-
-            <div class="tasks-header">
-
-                <div>
-
-                    <span class="section-label">
-                        SPOLEČNÁ MISE
-                    </span>
-
-                    <h2>Naše úkoly</h2>
-
-                    <p>
-                        Malé kroky, které udržují
-                        náš domov v pohybu.
-                    </p>
-
-                </div>
-
 
                 <button
-                    class="text-action"
+                    class="notebook-add-button"
                     data-action="add-task"
                 >
                     <i class="fa-solid fa-plus"></i>
-                    Nový
+                    Přidat
                 </button>
 
             </div>
 
-
-            <!-- Filtry -->
-
-            <div class="task-filters">
-
-                <button
-                    class="task-filter active"
-                    data-filter="all"
-                >
-                    Vše
-                </button>
-
-                <button
-                    class="task-filter"
-                    data-filter="pending"
-                >
-                    Čeká
-                </button>
-
-                <button
-                    class="task-filter"
-                    data-filter="progress"
-                >
-                    Probíhá
-                </button>
-
-                <button
-                    class="task-filter"
-                    data-filter="completed"
-                >
-                    Hotovo
-                </button>
-
-            </div>
-
-
-            <!-- Seznam úkolů -->
 
             <div
                 id="allTasks"
-                class="task-list"
-            >
+                class="notebook-pages"
+            ></div>
 
-                <div class="empty-state">
+        </div>
 
-                    <div class="empty-icon">
-                        <i class="fa-solid fa-check-double"></i>
-                    </div>
-
-                    <h3>Zatím žádné úkoly</h3>
-
-                    <p>
-                        Vypadá to, že máte vše hotovo.
-                    </p>
-
-                </div>
-
-            </div>
-
-        </section>
+    </section>
 
 
-        <!-- =============================================
-             RODINA
-        ============================================== -->
-
-        <section
-            id="family"
-            class="content-section"
-        >
-
-            <div class="family-page-hero">
-
-                <div class="family-page-image"></div>
-
-                <div class="family-page-overlay"></div>
-
-
-                <div class="family-page-content">
-
-                    <span class="section-label">
-                        NÁŠ MALÝ VESMÍR
-                    </span>
-
-                    <h2>Rodina Malátových</h2>
-
-                    <p>
-                        Všechny naše plány, vzpomínky
-                        a důležité okamžiky na jednom místě.
-                    </p>
-
-                </div>
-
-            </div>
-
-
-            <div class="section-heading">
-
-                <div>
-
-                    <span class="section-label">
-                        POSÁDKA
-                    </span>
-
-                    <h2>Členové domácnosti</h2>
-
-                </div>
-
-            </div>
-
-
-            <!-- Členy později načteme ze Supabase -->
-
-            <div
-                id="familyMembers"
-                class="family-members"
-            >
-
-                <div class="member-placeholder">
-
-                    <div class="member-avatar">
-                        <i class="fa-solid fa-user"></i>
-                    </div>
-
-                    <div>
-                        <strong>Načítání rodiny...</strong>
-                        <span>
-                            Připojíme po nastavení Supabase.
-                        </span>
-                    </div>
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-    </main>
-
-
-    <!-- =================================================
-         PLOVOUCÍ TLAČÍTKO
-    ================================================== -->
-
-    <button
-        id="floatingAddButton"
-        class="floating-add-button"
-        aria-label="Přidat novou událost nebo úkol"
-    >
-
-        <i class="fa-solid fa-plus"></i>
-
-    </button>
-
-
-    <!-- =================================================
+    <!-- =========================================
          SPODNÍ NAVIGACE
-    ================================================== -->
+    ========================================== -->
 
-    <nav class="bottom-navigation">
+    <nav
+        class="bottom-navigation"
+        aria-label="Hlavní navigace"
+    >
 
         <button
             class="bottom-nav-item active"
@@ -684,7 +487,9 @@
 
             <i class="fa-solid fa-house"></i>
 
-            <span>Přehled</span>
+            <span>
+                Domů
+            </span>
 
         </button>
 
@@ -694,9 +499,24 @@
             data-section="calendar"
         >
 
-            <i class="fa-regular fa-calendar"></i>
+            <i class="fa-regular fa-calendar-days"></i>
 
-            <span>Kalendář</span>
+            <span>
+                Kalendář
+            </span>
+
+        </button>
+
+
+        <!-- Hlavní tlačítko Přidat -->
+
+        <button
+            id="floatingAddButton"
+            class="floating-add-button"
+            aria-label="Přidat nový záznam"
+        >
+
+            <i class="fa-solid fa-plus"></i>
 
         </button>
 
@@ -708,50 +528,60 @@
 
             <i class="fa-solid fa-list-check"></i>
 
-            <span>Úkoly</span>
+            <span>
+                Úkoly
+            </span>
 
         </button>
 
 
         <button
+            id="notificationNavButton"
             class="bottom-nav-item"
-            data-section="family"
+            aria-label="Notifikace"
         >
 
-            <i class="fa-solid fa-heart"></i>
+            <i class="fa-regular fa-bell"></i>
 
-            <span>Rodina</span>
+            <span>
+                Upozornění
+            </span>
 
         </button>
 
     </nav>
 
+</main>
 
-</div>
 
-
-<!-- =====================================================
-     MODÁLNÍ OKNO – PŘIDÁNÍ
-====================================================== -->
+<!-- =============================================
+     MODÁLNÍ OKNO PRO PŘIDÁNÍ A ÚPRAVY
+============================================== -->
 
 <div
     id="addModal"
     class="modal hidden"
+    aria-hidden="true"
 >
 
-    <div class="modal-backdrop"></div>
+    <div
+        class="modal-backdrop"
+    ></div>
 
 
-    <div class="modal-content">
+    <div
+        class="modal-content"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modalTitle"
+    >
 
         <button
             id="closeModal"
             class="close-modal"
             aria-label="Zavřít"
         >
-
             <i class="fa-solid fa-xmark"></i>
-
         </button>
 
 
@@ -761,7 +591,9 @@
                 NOVÝ ZÁZNAM
             </span>
 
-            <h2>Co přidáme?</h2>
+            <h2 id="modalTitle">
+                Co přidáme?
+            </h2>
 
             <p>
                 Vyberte, co chcete přidat
@@ -773,12 +605,10 @@
 
         <div class="add-options">
 
-
-            <!-- Nová událost -->
-
             <button
                 id="createEventButton"
                 class="add-option"
+                type="button"
             >
 
                 <div class="add-option-icon">
@@ -787,52 +617,54 @@
 
                 </div>
 
-
                 <div class="add-option-text">
 
-                    <h3>Nová událost</h3>
+                    <h3>
+                        Nová událost
+                    </h3>
 
                     <p>
-                        Naplánovat důležitý společný okamžik.
+                        Naplánovat důležitý
+                        okamžik.
                     </p>
 
                 </div>
-
 
                 <i class="fa-solid fa-arrow-right"></i>
 
             </button>
 
-
-            <!-- Nový úkol -->
 
             <button
                 id="createTaskButton"
                 class="add-option"
+                type="button"
             >
 
-                <div class="add-option-icon task-icon">
+                <div
+                    class="add-option-icon task-icon"
+                >
 
-                    <i class="fa-solid fa-list-check"></i>
+                    <i class="fa-solid fa-pen"></i>
 
                 </div>
 
-
                 <div class="add-option-text">
 
-                    <h3>Nový úkol</h3>
+                    <h3>
+                        Nový zápis
+                    </h3>
 
                     <p>
-                        Přidat něco, co je potřeba udělat.
+                        Přidat něco do
+                        rodinného zápisníku.
                     </p>
 
                 </div>
 
-
                 <i class="fa-solid fa-arrow-right"></i>
 
             </button>
-
 
         </div>
 
@@ -841,7 +673,8 @@
 </div>
 
 
-<!-- JavaScript aplikace -->
+<!-- Hlavní JavaScript -->
+
 <script src="app.js"></script>
 
 </body>
