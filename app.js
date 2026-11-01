@@ -873,58 +873,42 @@ function renderTasks() {
 
 function createTaskCard(task) {
 
-    const isCompleted =
-        task.status === "completed";
+const isCompleted =
+    task.status === "completed";
 
-    const statusLabel = {
-        pending: "Čeká",
-        progress: "Probíhá",
-        completed: "Hotovo"
-    }[task.status] || "Čeká";
+return `
+    <div class="task-note ${
+        isCompleted ? "completed" : ""
+    }">
 
-    return `
-        <div
-            class="task-card ${
-                isCompleted
-                    ? "completed"
-                    : ""
-            }"
+        <button
+            class="task-check"
+            data-task-id="${task.id}"
+            aria-label="Označit úkol jako hotový"
         >
+            <i class="fa-solid fa-check"></i>
+        </button>
 
-            <button
-                class="task-check"
-                data-task-id="${task.id}"
-                aria-label="Změnit stav úkolu"
-            >
-                <i class="fa-solid fa-check"></i>
-            </button>
+        <div class="task-note-content">
 
-            <div class="task-info">
-
-                <h3>
-                    ${escapeHtml(task.title)}
-                </h3>
-
-                ${
-                    task.description
-                        ? `
-                            <p>
-                                ${escapeHtml(
-                                    task.description
-                                )}
-                            </p>
-                        `
-                        : ""
-                }
-
+            <div class="task-note-title">
+                ${escapeHtml(task.title)}
             </div>
 
-            <span class="task-status">
-                ${statusLabel}
-            </span>
+            ${
+                task.description
+                    ? `
+                        <div class="task-note-description">
+                            ${escapeHtml(task.description)}
+                        </div>
+                    `
+                    : ""
+            }
 
         </div>
-    `;
+
+    </div>
+`;
 
 }
 
