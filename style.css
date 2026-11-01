@@ -1,0 +1,1075 @@
+/* ========================================
+NAŠE DOMÁCNOST – HLAVNÍ VZHLED APLIKACE
+======================================== */
+
+/* ZÁKLADNÍ NASTAVENÍ */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  }
+
+:root {
+--primary: #4f7f72;
+--primary-dark: #365c52;
+--primary-light: #e4f0ec;
+
+--accent: #d9a441;
+--background: #f3f5f3;
+
+--card: rgba(255, 255, 255, 0.92);
+--text: #1f2a27;
+--text-light: #68736f;
+
+--border: rgba(255, 255, 255, 0.55);
+--shadow: 0 8px 30px rgba(20, 40, 32, 0.12);
+
+--radius: 20px;
+
+}
+
+html {
+scroll-behavior: smooth;
+}
+
+body {
+min-height: 100vh;
+font-family: Arial, Helvetica, sans-serif;
+color: var(--text);
+background: var(--background);
+padding-bottom: 90px;
+}
+
+/* ========================================
+POZADÍ S RODINNOU FOTOGRAFIÍ
+======================================== */
+
+body::before {
+content: "";
+position: fixed;
+inset: 0;
+
+/*
+  Později sem vložíme rodinnou fotografii.
+  Soubor bude uložen například:
+  images/family-background.jpg
+*/
+
+background:
+    linear-gradient(
+        rgba(242, 246, 243, 0.88),
+        rgba(242, 246, 243, 0.93)
+    ),
+    url("images/family-background.jpg");
+
+background-position: center;
+background-size: cover;
+background-attachment: fixed;
+
+z-index: -2;
+
+}
+
+/* Jemný efekt přes fotografii */
+.background-overlay {
+position: fixed;
+inset: 0;
+background: rgba(40, 70, 60, 0.08);
+backdrop-filter: blur(2px);
+z-index: -1;
+}
+
+/* ========================================
+HLAVNÍ KONTEJNER
+======================================== */
+
+.app-container {
+width: min(100%, 1100px);
+margin: 0 auto;
+padding: 20px;
+}
+
+/* ========================================
+HLAVIČKA
+======================================== */
+
+.app-header {
+background: rgba(255, 255, 255, 0.82);
+border: 1px solid var(--border);
+box-shadow: var(--shadow);
+backdrop-filter: blur(14px);
+
+border-radius: var(--radius);
+padding: 22px;
+margin-bottom: 18px;
+
+}
+
+.header-top {
+display: flex;
+align-items: center;
+justify-content: space-between;
+gap: 15px;
+}
+
+.logo {
+display: flex;
+align-items: center;
+gap: 14px;
+}
+
+.logo > i {
+width: 52px;
+height: 52px;
+display: grid;
+place-items: center;
+
+border-radius: 16px;
+background: var(--primary);
+color: white;
+font-size: 23px;
+
+box-shadow: 0 8px 18px rgba(79, 127, 114, 0.28);
+
+}
+
+.logo h1 {
+font-size: clamp(1.25rem, 4vw, 1.7rem);
+margin-bottom: 3px;
+}
+
+.logo span {
+color: var(--text-light);
+font-size: 0.88rem;
+}
+
+.notification-button {
+position: relative;
+width: 48px;
+height: 48px;
+border: none;
+border-radius: 50%;
+
+display: grid;
+place-items: center;
+
+background: rgba(79, 127, 114, 0.12);
+color: var(--primary-dark);
+
+font-size: 20px;
+cursor: pointer;
+transition: 0.2s ease;
+
+}
+
+.notification-button:hover {
+transform: translateY(-2px);
+background: rgba(79, 127, 114, 0.2);
+}
+
+.notification-badge {
+position: absolute;
+top: 2px;
+right: 2px;
+
+min-width: 19px;
+height: 19px;
+padding: 0 5px;
+
+display: grid;
+place-items: center;
+
+background: #d85b58;
+color: white;
+
+font-size: 0.7rem;
+font-weight: bold;
+
+border: 2px solid white;
+border-radius: 50%;
+
+}
+
+/* CITÁT O RODINĚ */
+
+.family-quote {
+margin-top: 18px;
+padding: 15px 17px;
+
+display: flex;
+align-items: flex-start;
+gap: 12px;
+
+background: rgba(79, 127, 114, 0.08);
+border-left: 4px solid var(--accent);
+border-radius: 12px;
+
+}
+
+.family-quote i {
+color: var(--accent);
+margin-top: 3px;
+}
+
+.family-quote p {
+font-size: 0.95rem;
+line-height: 1.5;
+font-style: italic;
+}
+
+/* ========================================
+HORNÍ NAVIGACE
+======================================== */
+
+.main-navigation {
+display: flex;
+gap: 8px;
+margin-bottom: 22px;
+padding: 7px;
+
+background: rgba(255, 255, 255, 0.76);
+border-radius: 16px;
+box-shadow: var(--shadow);
+backdrop-filter: blur(14px);
+
+}
+
+.nav-item {
+flex: 1;
+border: none;
+background: transparent;
+
+padding: 12px 10px;
+border-radius: 12px;
+
+color: var(--text-light);
+cursor: pointer;
+
+display: flex;
+align-items: center;
+justify-content: center;
+gap: 8px;
+
+font-size: 0.92rem;
+transition: 0.2s ease;
+
+}
+
+.nav-item:hover {
+background: rgba(79, 127, 114, 0.08);
+}
+
+.nav-item.active {
+background: var(--primary);
+color: white;
+box-shadow: 0 5px 14px rgba(79, 127, 114, 0.2);
+}
+
+/* ========================================
+OBSAH A SEKCE
+======================================== */
+
+.content-section {
+display: none;
+animation: fadeIn 0.3s ease;
+}
+
+.content-section.active {
+display: block;
+}
+
+@keyframes fadeIn {
+from {
+opacity: 0;
+transform: translateY(8px);
+}
+
+to {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+}
+
+/* UVÍTACÍ KARTA */
+
+.welcome-card {
+min-height: 130px;
+padding: 25px;
+
+display: flex;
+align-items: center;
+justify-content: space-between;
+
+background: linear-gradient(
+    135deg,
+    rgba(54, 92, 82, 0.94),
+    rgba(79, 127, 114, 0.9)
+);
+
+color: white;
+border-radius: var(--radius);
+box-shadow: var(--shadow);
+
+margin-bottom: 26px;
+
+}
+
+.small-title {
+font-size: 0.72rem;
+letter-spacing: 1.4px;
+font-weight: bold;
+opacity: 0.75;
+margin-bottom: 6px;
+}
+
+.welcome-card h2 {
+font-size: clamp(1.25rem, 5vw, 2rem);
+margin-bottom: 7px;
+}
+
+.welcome-card p {
+opacity: 0.85;
+}
+
+.welcome-icon {
+font-size: 48px;
+opacity: 0.8;
+}
+
+/* ========================================
+NADPISY SEKCE
+======================================== */
+
+.section-header {
+display: flex;
+align-items: flex-end;
+justify-content: space-between;
+gap: 15px;
+
+margin: 26px 0 13px;
+
+}
+
+.section-header h2 {
+font-size: 1.3rem;
+margin-bottom: 4px;
+}
+
+.section-header p {
+color: var(--text-light);
+font-size: 0.9rem;
+}
+
+.calendar-header {
+align-items: center;
+}
+
+/* ========================================
+TLAČÍTKA
+======================================== */
+
+button {
+font-family: inherit;
+}
+
+.add-button {
+border: none;
+border-radius: 12px;
+
+padding: 11px 15px;
+
+background: var(--primary);
+color: white;
+
+font-weight: bold;
+cursor: pointer;
+
+display: flex;
+align-items: center;
+gap: 7px;
+
+transition: 0.2s ease;
+
+}
+
+.add-button:hover {
+background: var(--primary-dark);
+transform: translateY(-1px);
+}
+
+.text-button {
+border: none;
+background: transparent;
+color: var(--primary-dark);
+
+font-weight: bold;
+cursor: pointer;
+
+display: flex;
+align-items: center;
+gap: 7px;
+
+}
+
+/* ========================================
+KARTY UDÁLOSTÍ
+======================================== */
+
+.cards-container {
+display: grid;
+gap: 11px;
+}
+
+.event-card,
+.family-card {
+display: flex;
+align-items: center;
+gap: 15px;
+
+padding: 16px;
+
+background: var(--card);
+border: 1px solid var(--border);
+border-radius: 16px;
+
+box-shadow: 0 5px 18px rgba(20, 40, 32, 0.07);
+backdrop-filter: blur(10px);
+
+}
+
+.event-date-icon {
+min-width: 58px;
+height: 58px;
+
+display: grid;
+place-items: center;
+
+background: var(--primary-light);
+color: var(--primary-dark);
+
+border-radius: 15px;
+font-weight: bold;
+
+}
+
+.event-time {
+font-size: 0.85rem;
+}
+
+.event-info {
+flex: 1;
+}
+
+.event-info h3,
+.family-card h3 {
+font-size: 1rem;
+margin-bottom: 5px;
+}
+
+.event-info p,
+.family-card p {
+color: var(--text-light);
+font-size: 0.88rem;
+line-height: 1.4;
+}
+
+.card-more-button {
+width: 35px;
+height: 35px;
+
+border: none;
+background: transparent;
+color: var(--text-light);
+
+cursor: pointer;
+border-radius: 10px;
+
+}
+
+.card-more-button:hover {
+background: var(--primary-light);
+}
+
+/* ========================================
+ÚKOLY
+======================================== */
+
+.task-preview,
+.task-list {
+display: grid;
+gap: 10px;
+}
+
+.task-item {
+position: relative;
+display: flex;
+align-items: center;
+gap: 13px;
+
+padding: 16px;
+
+background: var(--card);
+border-radius: 16px;
+box-shadow: 0 5px 18px rgba(20, 40, 32, 0.07);
+
+cursor: pointer;
+transition: 0.2s ease;
+
+}
+
+.task-item:hover {
+transform: translateY(-1px);
+}
+
+.task-item input {
+position: absolute;
+opacity: 0;
+}
+
+.custom-checkbox {
+width: 24px;
+height: 24px;
+min-width: 24px;
+
+display: grid;
+place-items: center;
+
+border: 2px solid var(--primary);
+border-radius: 8px;
+
+color: transparent;
+transition: 0.2s ease;
+
+}
+
+.task-item input:checked + .custom-checkbox {
+background: var(--primary);
+color: white;
+}
+
+.custom-checkbox i {
+font-size: 12px;
+}
+
+.task-text {
+font-size: 0.95rem;
+}
+
+.task-item.completed .task-text {
+text-decoration: line-through;
+color: var(--text-light);
+}
+
+/* FILTRY ÚKOLŮ */
+
+.task-filters {
+display: flex;
+flex-wrap: wrap;
+gap: 8px;
+margin-bottom: 18px;
+}
+
+.task-filter {
+border: 1px solid rgba(79, 127, 114, 0.18);
+background: rgba(255, 255, 255, 0.75);
+
+padding: 9px 13px;
+border-radius: 20px;
+
+color: var(--text-light);
+cursor: pointer;
+
+}
+
+.task-filter.active {
+background: var(--primary);
+color: white;
+border-color: var(--primary);
+}
+
+/* ========================================
+KALENDÁŘ
+======================================== */
+
+.calendar-card {
+padding: 15px;
+
+background: rgba(255, 255, 255, 0.88);
+border-radius: var(--radius);
+box-shadow: var(--shadow);
+
+backdrop-filter: blur(14px);
+
+}
+
+.calendar-weekdays,
+.calendar-days {
+display: grid;
+grid-template-columns: repeat(7, 1fr);
+gap: 5px;
+}
+
+.calendar-weekdays {
+margin-bottom: 8px;
+}
+
+.calendar-weekdays span {
+text-align: center;
+color: var(--text-light);
+font-size: 0.75rem;
+font-weight: bold;
+padding: 6px 0;
+}
+
+.calendar-days {
+min-height: 300px;
+}
+
+/* Tlačítka jednotlivých dnů vytvoří app.js */
+
+.calendar-day {
+min-height: 55px;
+border: none;
+border-radius: 10px;
+
+background: rgba(79, 127, 114, 0.05);
+color: var(--text);
+
+cursor: pointer;
+transition: 0.2s ease;
+
+}
+
+.calendar-day:hover {
+background: var(--primary-light);
+}
+
+.calendar-day.today {
+background: var(--primary);
+color: white;
+font-weight: bold;
+}
+
+.calendar-day.selected {
+outline: 3px solid var(--accent);
+}
+
+.calendar-day.has-event::after {
+content: "";
+display: block;
+
+width: 5px;
+height: 5px;
+
+margin: 4px auto 0;
+
+background: var(--accent);
+border-radius: 50%;
+
+}
+
+.calendar-controls {
+display: flex;
+gap: 7px;
+}
+
+.calendar-controls button {
+width: 40px;
+height: 40px;
+
+border: none;
+border-radius: 12px;
+
+background: rgba(255, 255, 255, 0.75);
+color: var(--primary-dark);
+
+cursor: pointer;
+
+}
+
+.selected-day-events {
+margin-top: 24px;
+}
+
+/* ========================================
+PRÁZDNÝ STAV
+======================================== */
+
+.empty-state {
+padding: 35px 20px;
+
+text-align: center;
+
+background: rgba(255, 255, 255, 0.78);
+border-radius: var(--radius);
+color: var(--text-light);
+
+}
+
+.empty-state i {
+font-size: 30px;
+margin-bottom: 10px;
+color: var(--primary);
+}
+
+/* ========================================
+RODINA
+======================================== */
+
+.family-card {
+margin-top: 18px;
+}
+
+.family-icon {
+width: 58px;
+height: 58px;
+
+min-width: 58px;
+
+display: grid;
+place-items: center;
+
+border-radius: 16px;
+background: var(--primary-light);
+color: var(--primary-dark);
+
+font-size: 23px;
+
+}
+
+.family-members {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+gap: 12px;
+
+margin-top: 18px;
+
+}
+
+/* ========================================
+PLOVOUCÍ TLAČÍTKO
+======================================== */
+
+.floating-add-button {
+position: fixed;
+
+right: max(25px, calc((100vw - 1100px) / 2));
+bottom: 28px;
+
+width: 58px;
+height: 58px;
+
+border: none;
+border-radius: 50%;
+
+background: var(--accent);
+color: white;
+
+font-size: 22px;
+
+box-shadow: 0 10px 25px rgba(80, 60, 20, 0.25);
+
+cursor: pointer;
+z-index: 20;
+
+transition: 0.2s ease;
+
+}
+
+.floating-add-button:hover {
+transform: scale(1.07) rotate(90deg);
+}
+
+/* ========================================
+SPODNÍ NAVIGACE
+======================================== */
+
+.bottom-navigation {
+display: none;
+}
+
+/* ========================================
+MODÁLNÍ OKNO
+======================================== */
+
+.modal {
+position: fixed;
+inset: 0;
+
+display: grid;
+place-items: center;
+
+padding: 20px;
+
+z-index: 100;
+
+}
+
+.modal.hidden {
+display: none;
+}
+
+.modal-backdrop {
+position: absolute;
+inset: 0;
+
+background: rgba(10, 20, 18, 0.55);
+backdrop-filter: blur(4px);
+
+}
+
+.modal-content {
+position: relative;
+width: min(100%, 480px);
+
+padding: 26px;
+
+background: white;
+border-radius: 24px;
+
+box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+
+z-index: 1;
+
+animation: modalIn 0.25s ease;
+
+}
+
+@keyframes modalIn {
+from {
+opacity: 0;
+transform: translateY(20px) scale(0.97);
+}
+
+to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
+
+}
+
+.close-modal {
+position: absolute;
+top: 13px;
+right: 13px;
+
+width: 38px;
+height: 38px;
+
+border: none;
+border-radius: 50%;
+
+background: #f1f3f2;
+color: var(--text);
+
+cursor: pointer;
+
+}
+
+.modal-header {
+padding-right: 35px;
+margin-bottom: 22px;
+}
+
+.modal-header h2 {
+margin-bottom: 7px;
+}
+
+.modal-header p {
+color: var(--text-light);
+line-height: 1.5;
+}
+
+.add-options {
+display: grid;
+gap: 12px;
+}
+
+.add-option {
+width: 100%;
+
+padding: 17px;
+
+display: flex;
+align-items: center;
+gap: 15px;
+
+text-align: left;
+
+border: 1px solid rgba(79, 127, 114, 0.12);
+border-radius: 16px;
+
+background: white;
+
+cursor: pointer;
+transition: 0.2s ease;
+
+}
+
+.add-option:hover {
+transform: translateY(-2px);
+border-color: var(--primary);
+box-shadow: 0 8px 20px rgba(20, 40, 32, 0.08);
+}
+
+.option-icon {
+width: 50px;
+height: 50px;
+
+min-width: 50px;
+
+display: grid;
+place-items: center;
+
+background: var(--primary-light);
+color: var(--primary-dark);
+
+border-radius: 14px;
+
+}
+
+.add-option h3 {
+margin-bottom: 4px;
+}
+
+.add-option p {
+color: var(--text-light);
+font-size: 0.85rem;
+}
+
+/* ========================================
+MOBILNÍ VERZE
+======================================== */
+
+@media (max-width: 700px) {
+
+body {
+    padding-bottom: 95px;
+}
+
+.app-container {
+    padding: 12px;
+}
+
+.app-header {
+    padding: 17px;
+    border-radius: 18px;
+}
+
+.main-navigation {
+    display: none;
+}
+
+.bottom-navigation {
+    position: fixed;
+
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    height: 72px;
+
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+
+    padding: 6px 8px 10px;
+
+    background: rgba(255, 255, 255, 0.95);
+    border-top: 1px solid rgba(0, 0, 0, 0.06);
+
+    backdrop-filter: blur(15px);
+
+    z-index: 50;
+}
+
+.bottom-nav-item {
+    flex: 1;
+
+    border: none;
+    background: transparent;
+
+    color: var(--text-light);
+    cursor: pointer;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+
+    font-size: 0.65rem;
+
+    padding: 7px;
+    border-radius: 12px;
+}
+
+.bottom-nav-item i {
+    font-size: 18px;
+}
+
+.bottom-nav-item.active {
+    color: var(--primary-dark);
+    font-weight: bold;
+}
+
+.section-header {
+    align-items: center;
+}
+
+.section-header h2 {
+    font-size: 1.15rem;
+}
+
+.section-header p {
+    font-size: 0.8rem;
+}
+
+.welcome-card {
+    padding: 20px;
+}
+
+.welcome-icon {
+    font-size: 38px;
+}
+
+.nav-item span {
+    display: none;
+}
+
+.floating-add-button {
+    right: 20px;
+    bottom: 88px;
+
+    width: 54px;
+    height: 54px;
+}
+
+.calendar-day {
+    min-height: 45px;
+    font-size: 0.82rem;
+}
+
+.calendar-card {
+    padding: 10px;
+}
+
+.event-card {
+    padding: 13px;
+}
+
+.event-date-icon {
+    min-width: 48px;
+    height: 48px;
+}
+
+}
+
+@media (min-width: 701px) {
+
+.floating-add-button {
+    bottom: 35px;
+}
+
+  }
